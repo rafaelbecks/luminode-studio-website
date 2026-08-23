@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Luminode Studio — exploraciones de percepción computacional, sonido, luz, geometría y memoria."
+    />
+    <meta name="theme-color" content="#050505" />
+    <title>luminode studio</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.js"
+    ></script>
+  </head>
+  <body class="is-booting">
+    <iframe
+      class="glow-bg"
+      src="/glow/index.html?embed=1"
+      title=""
+      aria-hidden="true"
+      tabindex="-1"
+    ></iframe>
+    <div class="glow-bg__veil" aria-hidden="true"></div>
+
+    <svg class="svg-filters" aria-hidden="true" focusable="false">
+      <filter id="soft-noise" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.85"
+          numOctaves="2"
+          stitchTiles="stitch"
+        />
+        <feColorMatrix type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="table" tableValues="0 0.55" />
+        </feComponentTransfer>
+      </filter>
+    </svg>
+
+    <main class="site-shell">
+      <section class="boot-screen" aria-label="Luminode Studio">
+
+        <h1 class="boot-logo">
+          <span class="boot-logo__lumi">lumi</span>
+          <span class="boot-logo__node">node</span>
+          <span class="boot-logo__studio">studio</span>
+        </h1>
+
+        <button class="continue-prompt js-enter" type="button">
+          <span class="continue-prompt__cursor" aria-hidden="true">›</span>
+          (presiona cualquier tecla para continuar)
+        </button>
+      </section>
+
+      <section class="archive" aria-labelledby="archive-title" inert>
+        <header class="archive__header">
+          <div>
+            <p class="archive__index">LNS / ARCHIVO / LS-001—003</p>
+            <h2 id="archive-title">luminode studio</h2>
+          </div>
+          <div class="archive__actions">
+            <a
+              class="icon-button js-nav-music"
+              href="/music"
+              aria-label="Música"
+              title="Música"
+            >
+              <ion-icon name="disc-outline" aria-hidden="true"></ion-icon>
+            </a>
+            <button
+              class="icon-button js-about"
+              type="button"
+              aria-label="¿Qué es Luminode Studio?"
+              title="¿Qué es Luminode Studio?"
+            >
+              <ion-icon name="prism-outline" aria-hidden="true"></ion-icon>
+            </button>
+          </div>
+        </header>
+
+        <div class="archive__intro">
+        </div>
+
+        <div class="disk-grid" role="list">
+          <article
+            class="project project--musgo"
+            role="listitem"
+            data-angle="-9"
+          >
+            <button
+              class="disk js-select"
+              type="button"
+              data-project="musgo"
+              data-url="https://musgo.luminode.studio/"
+              aria-label="Seleccionar MUSGO"
+            >
+              <span class="disk__shadow" aria-hidden="true"></span>
+              <span class="disk__shell" aria-hidden="true">
+                <img class="disk__art" src="/diskette.svg" alt="" draggable="false" />
+                <span class="disk__tint"></span>
+              </span>
+              <span class="disk__sticker" aria-hidden="true">
+                <img src="/brands/musgo.png" alt="" draggable="false" />
+              </span>
+            </button>
+            <div class="project__meta">
+              <p><span>LS-001</span> MUSGO</p>
+              <button
+                class="project__info js-project-info"
+                type="button"
+                data-project="musgo"
+                aria-label="Información sobre MUSGO"
+              >
+                <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+              </button>
+            </div>
+          </article>
+
+          <article
+            class="project project--glow"
+            role="listitem"
+            data-angle="3"
+          >
+            <button
+              class="disk js-select"
+              type="button"
+              data-project="glow"
+              data-url="https://glow.luminode.studio/"
+              aria-label="Seleccionar G.L.O.W."
+            >
+              <span class="disk__shadow" aria-hidden="true"></span>
+              <span class="disk__shell" aria-hidden="true">
+                <img class="disk__art" src="/diskette.svg" alt="" draggable="false" />
+                <span class="disk__tint"></span>
+              </span>
+              <span class="disk__sticker" aria-hidden="true">
+                <img src="/brands/glow.png" alt="" draggable="false" />
+              </span>
+            </button>
+            <div class="project__meta">
+              <p><span>LS-002</span> G.L.O.W.</p>
+              <button
+                class="project__info js-project-info"
+                type="button"
+                data-project="glow"
+                aria-label="Información sobre G.L.O.W."
+              >
+                <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+              </button>
+            </div>
+          </article>
+
+          <article
+            class="project project--intemperie"
+            role="listitem"
+            data-angle="10"
+          >
+            <button
+              class="disk js-select"
+              type="button"
+              data-project="intemperie"
+              data-url="https://intemperie.luminode.studio/"
+              aria-label="Seleccionar Topografías de la intemperie"
+            >
+              <span class="disk__shadow" aria-hidden="true"></span>
+              <span class="disk__shell" aria-hidden="true">
+                <img class="disk__art" src="/diskette.svg" alt="" draggable="false" />
+                <span class="disk__tint"></span>
+              </span>
+              <span class="disk__sticker" aria-hidden="true">
+                <img src="/brands/intemperie.png" alt="" draggable="false" />
+              </span>
+            </button>
+            <div class="project__meta">
+              <p><span>LS-003</span> INTEMPERIE</p>
+              <button
+                class="project__info js-project-info"
+                type="button"
+                data-project="intemperie"
+                aria-label="Información sobre Topografías de la intemperie"
+              >
+                <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <footer class="archive__footer">
+          <p>computación como percepció.</p>
+          <p>© <span class="js-year"></span> luminode studio</p>
+        </footer>
+      </section>
+
+      <section class="music" aria-labelledby="music-title" inert>
+        <header class="archive__header">
+          <div>
+            <p class="archive__index">LNS / MÚSICA / MD-001—004</p>
+            <h2 id="music-title">rafael dormido</h2>
+          </div>
+          <div class="archive__actions">
+            <a
+              class="icon-button js-nav-archive"
+              href="/software"
+              aria-label="Archivo"
+              title="Archivo"
+            >
+              <ion-icon name="save-outline" aria-hidden="true"></ion-icon>
+            </a>
+            <button
+              class="icon-button js-about"
+              type="button"
+              aria-label="¿Qué es Luminode Studio?"
+              title="¿Qué es Luminode Studio?"
+            >
+              <ion-icon name="prism-outline" aria-hidden="true"></ion-icon>
+            </button>
+          </div>
+        </header>
+
+        <div class="archive__intro"></div>
+
+        <div class="md-grid" role="list">
+          <article
+            class="release"
+            role="listitem"
+            data-angle="-8"
+            style="--md-color: #6e6d52"
+          >
+            <button
+              class="minidisc js-md-select"
+              type="button"
+              data-release="in-permanent-sequences"
+              data-url="https://dormidos.bandcamp.com/album/in-permanent-sequences"
+              aria-label="Seleccionar [in]permanent sequences"
+            >
+              <span class="minidisc__shadow" aria-hidden="true"></span>
+              <span class="minidisc__shell" aria-hidden="true">
+                <img class="minidisc__art" src="/minidisc.webp" alt="" draggable="false" />
+                <span class="minidisc__tint"></span>
+                <span class="minidisc__cover">
+                  <img
+                    src="/covers/in-permanent-sequences.jpg"
+                    alt=""
+                    draggable="false"
+                  />
+                </span>
+              </span>
+            </button>
+            <div class="release__meta">
+              <p><span>MD-001</span> [in]permanent sequences</p>
+            </div>
+          </article>
+
+          <article
+            class="release"
+            role="listitem"
+            data-angle="4"
+            style="--md-color: #5a5a5a"
+          >
+            <button
+              class="minidisc js-md-select"
+              type="button"
+              data-release="na-ves-oscillations"
+              data-url="https://dormidos.bandcamp.com/album/na-ves-oscillations"
+              aria-label="Seleccionar naïves oscillations"
+            >
+              <span class="minidisc__shadow" aria-hidden="true"></span>
+              <span class="minidisc__shell" aria-hidden="true">
+                <img class="minidisc__art" src="/minidisc.webp" alt="" draggable="false" />
+                <span class="minidisc__tint"></span>
+                <span class="minidisc__cover">
+                  <img
+                    src="/covers/na-ves-oscillations.jpg"
+                    alt=""
+                    draggable="false"
+                  />
+                </span>
+              </span>
+            </button>
+            <div class="release__meta">
+              <p><span>MD-002</span> naïves oscillations</p>
+            </div>
+          </article>
+
+          <article
+            class="release"
+            role="listitem"
+            data-angle="-5"
+            style="--md-color: #7a8f88"
+          >
+            <button
+              class="minidisc js-md-select"
+              type="button"
+              data-release="computer-perspective"
+              data-url="https://dormidos.bandcamp.com/album/computer-perspective"
+              aria-label="Seleccionar computer perspective"
+            >
+              <span class="minidisc__shadow" aria-hidden="true"></span>
+              <span class="minidisc__shell" aria-hidden="true">
+                <img class="minidisc__art" src="/minidisc.webp" alt="" draggable="false" />
+                <span class="minidisc__tint"></span>
+                <span class="minidisc__cover">
+                  <img
+                    src="/covers/computer-perspective.jpg"
+                    alt=""
+                    draggable="false"
+                  />
+                </span>
+              </span>
+            </button>
+            <div class="release__meta">
+              <p><span>MD-003</span> computer perspective</p>
+            </div>
+          </article>
+
+          <article
+            class="release"
+            role="listitem"
+            data-angle="9"
+            style="--md-color: #4f87cb"
+          >
+            <button
+              class="minidisc js-md-select"
+              type="button"
+              data-release="sonidos-incandescentes"
+              data-url="https://dormidos.bandcamp.com/album/sonidos-incandescentes"
+              aria-label="Seleccionar sonidos incandescentes"
+            >
+              <span class="minidisc__shadow" aria-hidden="true"></span>
+              <span class="minidisc__shell" aria-hidden="true">
+                <img class="minidisc__art" src="/minidisc.webp" alt="" draggable="false" />
+                <span class="minidisc__tint"></span>
+                <span class="minidisc__cover">
+                  <img
+                    src="/covers/sonidos-incandescentes.jpg"
+                    alt=""
+                    draggable="false"
+                  />
+                </span>
+              </span>
+            </button>
+            <div class="release__meta">
+              <p><span>MD-004</span> sonidos incandescentes</p>
+            </div>
+          </article>
+        </div>
+
+        <footer class="archive__footer">
+          <p>improvisations and sequences</p>
+          <p>
+            <a
+              class="music__bandcamp"
+              href="https://dormidos.bandcamp.com/"
+              target="_blank"
+              rel="noreferrer"
+              >dormidos.bandcamp.com</a
+            >
+          </p>
+        </footer>
+      </section>
+
+    </main>
+
+    <div class="drive" hidden>
+      <button class="drive__dismiss js-drive-dismiss" type="button" aria-label="Cerrar">
+        ×
+      </button>
+      <div class="drive__stage">
+        <div class="drive__actions">
+          <p class="drive__code js-drive-code"></p>
+          <p class="drive__title js-drive-title"></p>
+          <p class="drive__description js-drive-description"></p>
+          <button class="drive__launch js-drive-launch" type="button">
+            iniciar
+          </button>
+          <button class="drive__info js-drive-info" type="button">
+            info
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <dialog class="modal" id="about-modal" aria-labelledby="about-title">
+      <div class="modal__window">
+        <header class="modal__header">
+          <p id="about-title">¿Qué es Luminode Studio?</p>
+          <button class="modal__close" type="button" aria-label="Cerrar">×</button>
+        </header>
+        <div class="modal__body modal__body--about">
+          <div class="modal__copy">
+            <p>
+              Luminode Studio es la práctica creativa de Rafael Becerra,
+              dedicada a explorar modos computacionales de percepción.
+            </p>
+            <p>
+              A través de software, sonido, imagen, electrónica y medios
+              digitales, la práctica investiga otras maneras de escuchar, ver,
+              recordar, navegar, componer y habitar el mundo.
+            </p>
+            <p>
+              Los proyectos se desarrollan como ejercicios de exploración:
+              dispositivos, obras, herramientas, experimentos y sistemas que
+              permiten pensar haciendo. Se mueven entre arte, investigación,
+              tecnología y diseño, sin necesidad de pertenecer completamente a
+              ninguno de estos campos.
+            </p>
+          </div>
+          <figure class="modal__portrait">
+            <picture>
+              <source srcset="/me.webp" type="image/webp" />
+              <img
+                src="/me.jpg"
+                alt="Rafael Becerra"
+                width="1200"
+                height="800"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
+          </figure>
+          <nav class="modal__socials" aria-label="Redes">
+            <a
+              href="https://www.youtube.com/rafabece"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="YouTube"
+              title="YouTube"
+            >
+              <ion-icon name="logo-youtube" aria-hidden="true"></ion-icon>
+            </a>
+            <a
+              href="https://www.instagram.com/rafaelbecks"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+              title="Instagram"
+            >
+              <ion-icon name="logo-instagram" aria-hidden="true"></ion-icon>
+            </a>
+            <a
+              href="https://dormidos.bandcamp.com/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Bandcamp"
+              title="Bandcamp"
+            >
+              <svg class="modal__social-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M0 18.75h15.75L24 5.25H8.25L0 18.75z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://github.com/rafaelbecks/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+              title="GitHub"
+            >
+              <ion-icon name="logo-github" aria-hidden="true"></ion-icon>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="modal" id="project-modal" aria-labelledby="project-title">
+      <div class="modal__window">
+        <header class="modal__header">
+          <p id="project-title">Proyecto</p>
+          <button class="modal__close" type="button" aria-label="Cerrar">×</button>
+        </header>
+        <div class="modal__body">
+          <p class="modal__kicker js-modal-index"></p>
+          <h2 class="modal__project-title js-modal-title"></h2>
+          <p class="modal__lead js-modal-description"></p>
+          <p class="js-modal-detail"></p>
+          <div class="modal__tags js-modal-tags"></div>
+          <nav class="modal__links" aria-label="Recursos del proyecto">
+            <a class="js-modal-open" href="#">abrir proyecto ↗</a>
+            <a class="js-modal-repo" href="#">repositorio ↗</a>
+          </nav>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="launch-status" role="status" aria-live="assertive">
+      <span>montando disco</span>
+      <strong class="js-launch-name"></strong>
+      <i aria-hidden="true"></i>
+    </div>
+
+    <div class="crt" aria-hidden="true"></div>
+    <div class="noise" aria-hidden="true"></div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
