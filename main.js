@@ -4,9 +4,11 @@ const projects = {
     code: "LS-001",
     title: "MUSGO",
     description:
-      "Un espacio de juego para organismos generativos: morfogénesis procedural, texturas materiales y especímenes que pueden guardarse y volver a mutar.",
-    detail:
-      "",
+      "Un playground para experimentar con sistemas orgánicos generativos, deformativos y modulables en 3D.",
+    detail: [
+      "MUSGO (Morfogénesis de Unidades y Sistemas Generativos Orgánicos) explora la generación de organismos de forma procedural usando métodos como las superfórmulas de Gielis y los sistemas de Lindenmayer (L-systems), combinándolos con deformaciones, transformaciones y modulaciones dinámicas. Desde organismos y estructuras ramificadas hasta deformaciones de toros y geometrías que responden al movimiento.",
+      "Un espacio para experimentar con formas que pueden crecer, deformarse, oscilar y transformarse.",
+    ],
     url: "https://musgo.luminode.studio/",
     repo: "https://github.com/rafaelbecks/musgo",
     screenshots: [
@@ -37,28 +39,11 @@ const projects = {
     code: "LS-002",
     title: "G.L.O.W.",
     description:
-      "Un sintetizador visual abierto para componer luz con geometría y crear estructuras que evolucionan en tiempo real.",
+      "GLOW es un sintetizador visual open source para componer geometrías de luz en tiempo real.",
     detail:
-      "Pequeños sistemas de dibujo llamados Luminodes se combinan, desplazan y responden al sonido, MIDI o generadores internos. La imagen no es fija: se interpreta.",
+      "Inspirado en pioneros del arte computacional, busca hacer accesible la composición visual mediante módulos de luz geométricos (Luminodes), moduladores y herramientas interconectadas.",
     url: "https://glow.luminode.studio/",
     repo: "https://github.com/rafaelbecks/glow",
-    screenshots: [
-      {
-        thumb: "/projects/glow/glow-01.webp",
-        src: "/projects/glow/glow-01.png",
-        alt: "G.L.O.W. — composición de curvas luminosas",
-      },
-      {
-        thumb: "/projects/glow/glow-02.webp",
-        src: "/projects/glow/glow-02.png",
-        alt: "G.L.O.W. — estallido radial",
-      },
-      {
-        thumb: "/projects/glow/glow-03.webp",
-        src: "/projects/glow/glow-03.png",
-        alt: "G.L.O.W. — mallas en movimiento",
-      },
-    ],
   },
   intemperie: {
     index: "LS-003 / INSTALACIÓN INTERACTIVA",
@@ -340,7 +325,22 @@ function fillProjectModal(projectKey) {
   projectModal.querySelector(".js-modal-title").textContent = project.title;
   projectModal.querySelector(".js-modal-description").textContent =
     project.description;
-  projectModal.querySelector(".js-modal-detail").textContent = project.detail;
+
+  const detailNode = projectModal.querySelector(".js-modal-detail");
+  const detailParts = Array.isArray(project.detail)
+    ? project.detail.filter(Boolean)
+    : project.detail
+      ? [project.detail]
+      : [];
+  detailNode.replaceChildren(
+    ...detailParts.flatMap((part, index) => {
+      const nodes = [document.createTextNode(part)];
+      if (index < detailParts.length - 1) {
+        nodes.push(document.createElement("br"), document.createElement("br"));
+      }
+      return nodes;
+    }),
+  );
 
   const gallery = projectModal.querySelector(".js-modal-gallery");
   const shots = Array.isArray(project.screenshots) ? project.screenshots : [];
