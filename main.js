@@ -72,6 +72,7 @@ const MOVE_MS = 520;
 const MOVE_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 const MD_ASPECT = 863 / 900;
 const DISK_ASPECT = 616 / 592;
+const MOBILE_MQ = window.matchMedia("(max-width: 760px)");
 
 const body = document.body;
 const archive = document.querySelector(".archive");
@@ -174,6 +175,10 @@ function applyRoute() {
   setView(resolveView());
 }
 
+function isMobile() {
+  return MOBILE_MQ.matches;
+}
+
 function enterStudio({ replacePath = true, playBoot = false } = {}) {
   if (hasEntered || isLaunching) return;
 
@@ -196,6 +201,32 @@ function enterStudio({ replacePath = true, playBoot = false } = {}) {
         ? document.querySelector(".js-nav-archive")
         : document.querySelector(".archive .js-about");
     focusTarget?.focus({ preventScroll: true });
+  }, 80);
+}
+
+async function showFront({ push = true } = {}) {
+  if (!hasEntered || isLaunching) return;
+
+  if (activeDisk) await closeDrive();
+  closeDialog(aboutModal);
+  closeDialog(projectModal);
+
+  hasEntered = false;
+  body.classList.add("is-booting");
+  body.classList.remove("has-entered");
+  delete body.dataset.view;
+  bootScreen?.setAttribute("aria-hidden", "false");
+  archive?.setAttribute("inert", "");
+  music?.setAttribute("inert", "");
+
+  if (push && currentPath() !== "/") {
+    history.pushState({ view: "boot" }, "", "/");
+  } else if (!push && currentPath() !== "/") {
+    history.replaceState({ view: "boot" }, "", "/");
+  }
+
+  window.setTimeout(() => {
+    document.querySelector(".js-enter")?.focus({ preventScroll: true });
   }, 80);
 }
 
@@ -495,7 +526,8 @@ function onPointerDown(event) {
     isLaunching ||
     isAnimatingDisk ||
     drive.classList.contains("is-open") ||
-    activeDisk
+    activeDisk ||
+    isMobile()
   ) {
     return;
   }
@@ -525,6 +557,23 @@ function onPointerDown(event) {
   card.classList.add("is-dragging");
   disk.setPointerCapture?.(event.pointerId);
   event.preventDefault();
+}
+
+function onDiskClick(event) {
+  if (!isMobile()) return;
+  if (
+    !hasEntered ||
+    isLaunching ||
+    isAnimatingDisk ||
+    drive.classList.contains("is-open") ||
+    activeDisk
+  ) {
+    return;
+  }
+
+  const disk = event.currentTarget;
+  if (!disk || disk.classList.contains("is-focused")) return;
+  openDrive(disk);
 }
 
 function onPointerMove(event) {
@@ -626,14 +675,22 @@ document.querySelectorAll(".js-nav-archive").forEach((link) => {
   });
 });
 
+document.querySelectorAll(".js-home").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    showFront();
+  });
+});
+
 window.addEventListener("popstate", () => {
-  if (!hasEntered && isAppRoute()) {
-    enterStudio({ replacePath: false });
+  if (currentPath() === "/") {
+    if (hasEntered) showFront({ push: false });
     return;
   }
 
-  if (hasEntered && currentPath() === "/") {
-    history.replaceState({ view: "archive" }, "", "/software");
+  if (!hasEntered && isAppRoute()) {
+    enterStudio({ replacePath: false });
+    return;
   }
 
   applyRoute();
@@ -651,6 +708,7 @@ document.querySelectorAll(".js-select, .js-md-select").forEach((disk) => {
   disk.addEventListener("pointermove", onPointerMove);
   disk.addEventListener("pointerup", onPointerUp);
   disk.addEventListener("pointercancel", onPointerUp);
+  disk.addEventListener("click", onDiskClick);
 });
 
 document.querySelector(".js-drive-dismiss").addEventListener("click", closeDrive);

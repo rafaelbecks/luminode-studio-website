@@ -268,6 +268,27 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
+.archive__brand {
+  display: inline;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.archive__brand:hover,
+.archive__brand:focus-visible {
+  color: var(--paper);
+  outline: none;
+}
+
 .icon-button {
   display: grid;
   width: 28px;
@@ -1480,6 +1501,13 @@ a:focus-visible {
 
   .archive__hint {
     display: none;
+  }
+
+  .project,
+  .release {
+    touch-action: manipulation;
+    --drag-x: 0px !important;
+    --drag-y: 0px !important;
   }
 
   .disk-grid,
