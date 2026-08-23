@@ -62,7 +62,7 @@ const releases = {
     index: "MD-004 / MINIDISC",
     title: "sonidos incandescentes",
     description:
-      "sonidos incandescentes es una selección de composiciones inspiradas en poemas de Rafael Cadenas e influenciada por el proceso de edición de un poemario en memoria de mi padre fallecido.",
+      "sonidos incandescentes es una selección de composiciones inspiradas en poemas de Rafael Cadenas.",
     url: "https://dormidos.bandcamp.com/album/sonidos-incandescentes",
     launchLabel: "bandcamp",
   },
