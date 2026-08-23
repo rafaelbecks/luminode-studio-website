@@ -124,28 +124,7 @@ async function resolveSceneUrl() {
   const forced = params.get("scene");
   if (forced) return forced;
 
-  const response = await fetch("/glow-scenes/index.json", { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`Failed to list glow-scenes: ${response.status}`);
-  }
-
-  const payload = await response.json();
-  const scenes = Array.isArray(payload)
-    ? payload
-    : Array.isArray(payload?.scenes)
-      ? payload.scenes
-      : [];
-
-  if (!scenes.length) {
-    throw new Error("glow-scenes/index.json has no scenes");
-  }
-
-  const pick = scenes[Math.floor(Math.random() * scenes.length)];
-  const file = typeof pick === "string" ? pick : pick?.file;
-  if (!file) {
-    throw new Error("Invalid glow-scenes entry");
-  }
-
+  const file = "ramieles-dibujantes copy.glow";
   console.info("[luminode] background scene:", file);
   return `/glow-scenes/${encodeURIComponent(file).replace(/%2F/gi, "/")}`;
 }
