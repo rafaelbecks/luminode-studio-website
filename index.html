@@ -535,17 +535,19 @@
           <p id="project-title" class="js-modal-header">LS</p>
           <button class="modal__close" type="button" aria-label="Cerrar">×</button>
         </header>
-        <div class="modal__body">
-          <p class="modal__kicker js-modal-index"></p>
-          <h2 class="modal__project-title js-modal-title"></h2>
-          <p class="modal__lead js-modal-description"></p>
+        <div class="modal__body modal__body--project">
+          <div class="modal__project-copy js-modal-copy">
+            <p class="modal__kicker js-modal-index"></p>
+            <h2 class="modal__project-title js-modal-title"></h2>
+            <p class="modal__lead js-modal-description"></p>
+            <p class="js-modal-detail"></p>
+            <nav class="modal__links" aria-label="Recursos del proyecto">
+              <a class="js-modal-open" href="#">abrir proyecto ↗</a>
+              <a class="js-modal-repo" href="#">repositorio ↗</a>
+              <a class="js-modal-doc" href="#" hidden>documento ↗</a>
+            </nav>
+          </div>
           <div class="modal__gallery js-modal-gallery" hidden></div>
-          <p class="js-modal-detail"></p>
-          <nav class="modal__links" aria-label="Recursos del proyecto">
-            <a class="js-modal-open" href="#">abrir proyecto ↗</a>
-            <a class="js-modal-repo" href="#">repositorio ↗</a>
-            <a class="js-modal-doc" href="#" hidden>documento ↗</a>
-          </nav>
         </div>
       </div>
     </dialog>

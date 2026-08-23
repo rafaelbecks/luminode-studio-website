@@ -1268,7 +1268,41 @@ a:focus-visible {
 }
 
 #project-modal.modal {
-  width: min(760px, calc(100vw - 36px));
+  width: min(1120px, calc(100vw - 36px));
+  max-height: min(820px, calc(100svh - 36px));
+}
+
+.modal__body--project {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 0;
+  align-items: stretch;
+  overflow: hidden;
+  padding: 0;
+  min-height: 0;
+}
+
+.modal__body--project.is-text-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.modal__project-copy {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow: auto;
+  padding: clamp(25px, 4vw, 44px);
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal__project-copy > p {
+  margin: 0 0 1.5em;
+}
+
+.modal__project-copy .modal__links {
+  margin-top: auto;
+  padding-top: 28px;
 }
 
 .modal::backdrop {
@@ -1279,6 +1313,11 @@ a:focus-visible {
   display: flex;
   max-height: inherit;
   flex-direction: column;
+  min-height: 0;
+}
+
+.modal__window--project {
+  height: min(820px, calc(100svh - 36px));
 }
 
 .modal__header {
@@ -1415,8 +1454,16 @@ a:focus-visible {
 .modal__gallery {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  align-content: stretch;
+  align-self: stretch;
   gap: 10px;
-  margin: 28px 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-left: 1px solid var(--line);
+  padding: clamp(18px, 3vw, 28px);
+  background: #050505;
 }
 
 .modal__gallery[hidden] {
@@ -1426,20 +1473,22 @@ a:focus-visible {
 .modal__shot {
   display: block;
   width: 100%;
+  height: 100%;
+  min-height: 0;
   margin: 0;
   border: 1px solid var(--line);
   padding: 0;
   overflow: hidden;
   background: #111;
   cursor: zoom-in;
-  aspect-ratio: 16 / 10;
 }
 
 .modal__shot img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   transition:
     transform 420ms var(--ease-out),
     filter 280ms ease;
@@ -1786,6 +1835,29 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .modal__window--project {
+    height: auto;
+    max-height: min(820px, calc(100svh - 36px));
+  }
+
+  .modal__body--project {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+
+  .modal__project-copy {
+    overflow: visible;
+  }
+
+  .modal__gallery {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(120px, 22vh);
+    height: auto;
+    overflow: visible;
+  }
+
   .modal__portrait {
     order: -1;
     min-height: 220px;
@@ -1794,10 +1866,6 @@ a:focus-visible {
 
   .modal__socials {
     order: 2;
-  }
-
-  .modal__gallery {
-    grid-template-columns: 1fr;
   }
 
   .minidisc.is-focused.is-flipped {

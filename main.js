@@ -343,9 +343,12 @@ function fillProjectModal(projectKey) {
   );
 
   const gallery = projectModal.querySelector(".js-modal-gallery");
+  const projectBody = projectModal.querySelector(".modal__body--project");
+  const copyPane = projectModal.querySelector(".js-modal-copy");
   const shots = Array.isArray(project.screenshots) ? project.screenshots : [];
   gallery.replaceChildren();
   gallery.hidden = shots.length === 0;
+  projectBody?.classList.toggle("is-text-only", shots.length === 0);
   shots.forEach((shot) => {
     const fullSrc = shot.src;
     const thumbSrc = shot.thumb || shot.src;
@@ -388,12 +391,13 @@ function fillProjectModal(projectKey) {
     docLink.removeAttribute("download");
   }
 
-  const modalBody = projectModal.querySelector(".modal__body");
-  if (modalBody) modalBody.scrollTop = 0;
+  if (copyPane) copyPane.scrollTop = 0;
+  if (gallery) gallery.scrollTop = 0;
 
   openDialog(projectModal);
 
-  if (modalBody) modalBody.scrollTop = 0;
+  if (copyPane) copyPane.scrollTop = 0;
+  if (gallery) gallery.scrollTop = 0;
 }
 
 function clearDiskInlineStyles(disk) {
