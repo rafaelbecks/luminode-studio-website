@@ -1258,13 +1258,17 @@ a:focus-visible {
 
 .modal {
   width: min(920px, calc(100vw - 36px));
-  max-height: min(760px, calc(100svh - 36px));
+  max-height: min(860px, calc(100svh - 36px));
   margin: auto;
   border: 1px solid var(--paper);
   padding: 0;
   background: #070707;
   color: var(--paper);
   box-shadow: 18px 18px 0 rgba(255, 255, 255, 0.055);
+}
+
+#project-modal.modal {
+  width: min(760px, calc(100vw - 36px));
 }
 
 .modal::backdrop {
@@ -1396,7 +1400,7 @@ a:focus-visible {
 
 .modal__lead {
   font-family: var(--font-display);
-  font-size: clamp(19px, 3vw, 27px);
+  font-size: clamp(17px, 2.4vw, 22px);
   letter-spacing: 0.015em;
   line-height: 1.25;
 }
@@ -1408,20 +1412,43 @@ a:focus-visible {
   color: #aaa9a4;
 }
 
-.modal__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 28px;
+.modal__gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 28px 0;
 }
 
-.modal__tags span {
+.modal__gallery[hidden] {
+  display: none;
+}
+
+.modal__shot {
+  display: block;
+  width: 100%;
+  margin: 0;
   border: 1px solid var(--line);
-  padding: 5px 8px;
-  color: var(--dim);
-  font-size: 8px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  padding: 0;
+  overflow: hidden;
+  background: #111;
+  cursor: zoom-in;
+  aspect-ratio: 16 / 10;
+}
+
+.modal__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform 420ms var(--ease-out),
+    filter 280ms ease;
+}
+
+.modal__shot:hover img,
+.modal__shot:focus-visible img {
+  transform: scale(1.03);
+  filter: brightness(1.06);
 }
 
 .modal__kicker {
@@ -1459,6 +1486,50 @@ a:focus-visible {
 
 .modal__links a:hover {
   color: var(--green);
+}
+
+.modal__links a[hidden] {
+  display: none;
+}
+
+.lightbox {
+  width: min(1100px, calc(100vw - 28px));
+  max-height: calc(100svh - 28px);
+  margin: auto;
+  border: 0;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+  color: var(--paper);
+}
+
+.lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.lightbox__close {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 2;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  font-size: 28px;
+  font-weight: 200;
+  line-height: 1;
+}
+
+.lightbox__image {
+  display: block;
+  width: 100%;
+  max-height: calc(100svh - 48px);
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  object-fit: contain;
+  background: #050505;
 }
 
 .launch-status {
@@ -1723,6 +1794,10 @@ a:focus-visible {
 
   .modal__socials {
     order: 2;
+  }
+
+  .modal__gallery {
+    grid-template-columns: 1fr;
   }
 
   .minidisc.is-focused.is-flipped {

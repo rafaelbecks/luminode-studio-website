@@ -1,36 +1,100 @@
 const projects = {
   musgo: {
     index: "LS-001 / SISTEMA GENERATIVO",
+    code: "LS-001",
     title: "MUSGO",
     description:
-      "Un espacio de juego para organismos generativos: morfogénesis procedural, texturas materiales y especímenes que pueden guardarse y volver a mutar.",
+      "Playground for generative organisms: procedural morphogenesis, material textures, and saveable specimen state (.organism files).",
     detail:
-      "Sus familias de formas —toros, superficies mínimas, superformas, L-systems y agregación limitada por difusión— exploran cómo geometría, materia y resonancia pueden comportarse como una ecología.",
-    tags: ["morfogénesis", "three.js", "resonancia", "sistemas vivos"],
+      "Procedural families in the morphogenesis UI: torus / torus knot, minimal surfaces (Chen–Gackstätter, López–Ros), Gielis superformula, Baschet leaf, L-system organism, DLA (moss / coral), and loaded GLB.",
     url: "https://musgo.luminode.studio/",
     repo: "https://github.com/rafaelbecks/musgo",
+    screenshots: [
+      {
+        thumb: "/projects/musgo/gielis-anemona.webp",
+        src: "/projects/musgo/gielis-anemona.png",
+        alt: "Gielis superformula anemone",
+      },
+      {
+        thumb: "/projects/musgo/gielis-insecto.webp",
+        src: "/projects/musgo/gielis-insecto.png",
+        alt: "Gielis insect form",
+      },
+      {
+        thumb: "/projects/musgo/lsystem-anthropod.webp",
+        src: "/projects/musgo/lsystem-anthropod.png",
+        alt: "L-system anthropod",
+      },
+      {
+        thumb: "/projects/musgo/lsystem-bush.webp",
+        src: "/projects/musgo/lsystem-bush.png",
+        alt: "L-system bush",
+      },
+    ],
   },
   glow: {
     index: "LS-002 / SINTETIZADOR VISUAL",
+    code: "LS-002",
     title: "G.L.O.W.",
-    description:
-      "Un sintetizador visual abierto para componer luz con geometría y crear estructuras que evolucionan en tiempo real.",
+    description: "A generative visual instrument for composing light with geometry.",
     detail:
-      "Pequeños sistemas de dibujo llamados Luminodes se combinan, desplazan y responden al sonido, MIDI o generadores internos. La imagen no es fija: se interpreta.",
-    tags: ["luz", "geometría", "canvas", "midi", "código abierto"],
+      "G.L.O.W. is an open-source visual instrument for creating evolving geometric compositions in real time. Build scenes from Luminodes, small generative drawing systems, and make them move, oscillate, rotate and respond to sound, MIDI or internal generators.",
     url: "https://glow.luminode.studio/",
     repo: "https://github.com/rafaelbecks/glow",
+    screenshots: [
+      {
+        thumb: "/projects/glow/glow-01.webp",
+        src: "/projects/glow/glow-01.png",
+        alt: "G.L.O.W. — composición de curvas luminosas",
+      },
+      {
+        thumb: "/projects/glow/glow-02.webp",
+        src: "/projects/glow/glow-02.png",
+        alt: "G.L.O.W. — estallido radial",
+      },
+      {
+        thumb: "/projects/glow/glow-03.webp",
+        src: "/projects/glow/glow-03.png",
+        alt: "G.L.O.W. — mallas en movimiento",
+      },
+    ],
   },
   intemperie: {
     index: "LS-003 / INSTALACIÓN INTERACTIVA",
+    code: "LS-003",
     title: "Topografías de la intemperie",
     description:
-      "Una instalación interactiva que construye territorios imaginarios a partir de memorias espaciales deformadas.",
+      "Topografías de la intemperie es una instalación interactiva que construye territorios imaginarios a partir de memorias espaciales deformadas.",
     detail:
       "Paisajes virtuales navegables donde geografía, sonido, lenguaje e interacción convergen para producir una experiencia perceptiva inestable.",
-    tags: ["memoria", "cartografía", "sonido espacial", "three.js", "territorio"],
     url: "https://intemperie.luminode.studio/",
     repo: "https://github.com/rafaelbecks/topografias-intemperie",
+    document: {
+      href: "/projects/intemperie/topografias-intemperie.pdf",
+      label: "documento ↗",
+    },
+    screenshots: [
+      {
+        thumb: "/projects/intemperie/composition-01.webp",
+        src: "/projects/intemperie/composition-01.png",
+        alt: "Composición 1",
+      },
+      {
+        thumb: "/projects/intemperie/composition-02.webp",
+        src: "/projects/intemperie/composition-02.png",
+        alt: "Composición 2",
+      },
+      {
+        thumb: "/projects/intemperie/composition-03.webp",
+        src: "/projects/intemperie/composition-03.png",
+        alt: "Composición 3",
+      },
+      {
+        thumb: "/projects/intemperie/composition-04.webp",
+        src: "/projects/intemperie/composition-04.png",
+        alt: "Composición 4",
+      },
+    ],
   },
 };
 
@@ -84,6 +148,8 @@ const music = document.querySelector(".music");
 const bootScreen = document.querySelector(".boot-screen");
 const aboutModal = document.querySelector("#about-modal");
 const projectModal = document.querySelector("#project-modal");
+const shotLightbox = document.querySelector("#shot-lightbox");
+const lightboxImage = document.querySelector(".js-lightbox-image");
 const launchName = document.querySelector(".js-launch-name");
 const drive = document.querySelector(".drive");
 const driveCode = document.querySelector(".js-drive-code");
@@ -243,23 +309,64 @@ function openDialog(dialog) {
 
 function closeDialog(dialog) {
   if (dialog?.open) dialog.close();
+  if (dialog === projectModal) closeShotLightbox();
+}
+
+function openShotLightbox(src, alt = "") {
+  if (!shotLightbox || !lightboxImage) return;
+  lightboxImage.src = src;
+  lightboxImage.alt = alt;
+  if (!shotLightbox.open) shotLightbox.showModal();
+}
+
+function closeShotLightbox() {
+  if (!shotLightbox?.open) return;
+  shotLightbox.close();
+  if (lightboxImage) {
+    lightboxImage.removeAttribute("src");
+    lightboxImage.alt = "";
+  }
 }
 
 function fillProjectModal(projectKey) {
   const project = projects[projectKey];
   if (!project) return;
 
+  const header = projectModal.querySelector(".js-modal-header");
+  if (header) header.textContent = project.code || project.index.split(" / ")[0] || "LS";
+
   projectModal.querySelector(".js-modal-index").textContent = project.index;
   projectModal.querySelector(".js-modal-title").textContent = project.title;
   projectModal.querySelector(".js-modal-description").textContent =
     project.description;
   projectModal.querySelector(".js-modal-detail").textContent = project.detail;
-  projectModal.querySelector(".js-modal-tags").innerHTML = project.tags
-    .map((tag) => `<span>${tag}</span>`)
-    .join("");
+
+  const gallery = projectModal.querySelector(".js-modal-gallery");
+  const shots = Array.isArray(project.screenshots) ? project.screenshots : [];
+  gallery.replaceChildren();
+  gallery.hidden = shots.length === 0;
+  shots.forEach((shot) => {
+    const fullSrc = shot.src;
+    const thumbSrc = shot.thumb || shot.src;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "modal__shot";
+    button.setAttribute("aria-label", `Ampliar: ${shot.alt || project.title}`);
+    const img = document.createElement("img");
+    img.src = thumbSrc;
+    img.alt = shot.alt || "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    button.appendChild(img);
+    button.addEventListener("click", () =>
+      openShotLightbox(fullSrc, shot.alt || ""),
+    );
+    gallery.appendChild(button);
+  });
 
   const openLink = projectModal.querySelector(".js-modal-open");
   const repoLink = projectModal.querySelector(".js-modal-repo");
+  const docLink = projectModal.querySelector(".js-modal-doc");
   openLink.href = project.url;
   repoLink.href = project.repo;
   openLink.target = "_blank";
@@ -267,7 +374,25 @@ function fillProjectModal(projectKey) {
   openLink.rel = "noreferrer";
   repoLink.rel = "noreferrer";
 
+  if (project.document?.href) {
+    docLink.hidden = false;
+    docLink.href = project.document.href;
+    docLink.textContent = project.document.label || "documento ↗";
+    docLink.removeAttribute("download");
+    docLink.target = "_blank";
+    docLink.rel = "noreferrer";
+  } else {
+    docLink.hidden = true;
+    docLink.removeAttribute("href");
+    docLink.removeAttribute("download");
+  }
+
+  const modalBody = projectModal.querySelector(".modal__body");
+  if (modalBody) modalBody.scrollTop = 0;
+
   openDialog(projectModal);
+
+  if (modalBody) modalBody.scrollTop = 0;
 }
 
 function clearDiskInlineStyles(disk) {
@@ -890,6 +1015,21 @@ document.querySelectorAll(".modal").forEach((dialog) => {
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) closeDialog(dialog);
   });
+});
+
+shotLightbox?.querySelector(".lightbox__close")?.addEventListener("click", () => {
+  closeShotLightbox();
+});
+
+shotLightbox?.addEventListener("click", (event) => {
+  if (event.target === shotLightbox) closeShotLightbox();
+});
+
+shotLightbox?.addEventListener("close", () => {
+  if (lightboxImage) {
+    lightboxImage.removeAttribute("src");
+    lightboxImage.alt = "";
+  }
 });
 
 applyRoute();

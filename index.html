@@ -203,7 +203,7 @@
         </div>
 
         <footer class="archive__footer">
-          <p>computación como medio sensible.</p>
+          <p>computación como medio sensible</p>
           <div class="archive__footer-end">
             <p>© <span class="js-year"></span> luminode studio</p>
             <button
@@ -462,7 +462,7 @@
               recordar, navegar, componer y habitar el mundo.
             </p>
             <p>
-              Los proyectos se desarrollan como ejercicios de exploración:
+              Los proyectos se desarrollan como ejercicios sensibles de exploración:
               dispositivos, obras, herramientas, experimentos y sistemas que
               permiten pensar haciendo. Se mueven entre arte, investigación,
               tecnología y diseño, sin necesidad de pertenecer completamente a
@@ -530,23 +530,29 @@
     </dialog>
 
     <dialog class="modal" id="project-modal" aria-labelledby="project-title">
-      <div class="modal__window">
+      <div class="modal__window modal__window--project">
         <header class="modal__header">
-          <p id="project-title">Proyecto</p>
+          <p id="project-title" class="js-modal-header">LS</p>
           <button class="modal__close" type="button" aria-label="Cerrar">×</button>
         </header>
         <div class="modal__body">
           <p class="modal__kicker js-modal-index"></p>
           <h2 class="modal__project-title js-modal-title"></h2>
           <p class="modal__lead js-modal-description"></p>
+          <div class="modal__gallery js-modal-gallery" hidden></div>
           <p class="js-modal-detail"></p>
-          <div class="modal__tags js-modal-tags"></div>
           <nav class="modal__links" aria-label="Recursos del proyecto">
             <a class="js-modal-open" href="#">abrir proyecto ↗</a>
             <a class="js-modal-repo" href="#">repositorio ↗</a>
+            <a class="js-modal-doc" href="#" hidden>documento ↗</a>
           </nav>
         </div>
       </div>
+    </dialog>
+
+    <dialog class="lightbox" id="shot-lightbox" aria-label="Vista ampliada">
+      <button class="lightbox__close" type="button" aria-label="Cerrar">×</button>
+      <img class="lightbox__image js-lightbox-image" alt="" />
     </dialog>
 
     <div class="launch-status" role="status" aria-live="assertive">
