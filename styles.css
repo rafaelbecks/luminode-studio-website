@@ -904,6 +904,7 @@ a:focus-visible {
 .archive__footer {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 16px;
   border-top: 1px solid var(--line);
   padding-top: 18px;
@@ -915,6 +916,39 @@ a:focus-visible {
 
 .archive__footer p {
   margin: 0;
+}
+
+.archive__footer-end {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ambient-toggle {
+  display: inline-grid;
+  width: 1em;
+  height: 1em;
+  place-items: center;
+  flex-shrink: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+  line-height: 1;
+  transition: color 180ms ease;
+}
+
+.ambient-toggle ion-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+.ambient-toggle:hover,
+.ambient-toggle[aria-pressed="true"] {
+  color: var(--paper);
 }
 
 .drive {
@@ -1481,6 +1515,10 @@ a:focus-visible {
     flex-direction: column;
     gap: 8px;
     font-size: 12px;
+  }
+
+  .archive__footer-end {
+    align-self: flex-end;
   }
 
   .modal__body--about {

@@ -99,10 +99,44 @@ let diskHoist = null;
 let diskAnimation = null;
 let dragState = null;
 let currentView = "archive";
+let bootAudio = null;
+let interludeAudio = null;
 
 document.querySelectorAll(".js-year").forEach((node) => {
   node.textContent = String(new Date().getFullYear());
 });
+
+function playBootSound() {
+  if (!bootAudio) {
+    bootAudio = new Audio("/audio/boot-sound.mp3");
+    bootAudio.preload = "auto";
+  }
+  bootAudio.currentTime = 0;
+  bootAudio.play().catch(() => {});
+}
+
+function toggleInterlude() {
+  if (!interludeAudio) {
+    interludeAudio = new Audio("/audio/interlude-1.mp3");
+    interludeAudio.preload = "auto";
+    interludeAudio.loop = true;
+  }
+
+  const playing = interludeAudio.paused;
+  if (playing) {
+    interludeAudio.play().catch(() => {});
+  } else {
+    interludeAudio.pause();
+  }
+
+  document.querySelectorAll(".js-interlude").forEach((button) => {
+    button.setAttribute("aria-pressed", playing ? "true" : "false");
+    button.setAttribute(
+      "aria-label",
+      playing ? "Pausar interlude" : "Reproducir interlude",
+    );
+  });
+}
 
 function currentPath() {
   return window.location.pathname.replace(/\/$/, "") || "/";
@@ -140,13 +174,15 @@ function applyRoute() {
   setView(resolveView());
 }
 
-function enterStudio({ replacePath = true } = {}) {
+function enterStudio({ replacePath = true, playBoot = false } = {}) {
   if (hasEntered || isLaunching) return;
 
   hasEntered = true;
   body.classList.remove("is-booting");
   body.classList.add("has-entered");
   bootScreen?.setAttribute("aria-hidden", "true");
+
+  if (playBoot) playBootSound();
 
   if (replacePath && !isAppRoute()) {
     history.replaceState({ view: "archive" }, "", "/software");
@@ -536,7 +572,7 @@ document.addEventListener("keydown", (event) => {
   if (!hasEntered) {
     if (event.metaKey || event.ctrlKey || event.altKey) return;
     event.preventDefault();
-    enterStudio();
+    enterStudio({ playBoot: true });
     return;
   }
 
@@ -554,10 +590,19 @@ document.addEventListener("keydown", (event) => {
 
 document.querySelector(".js-enter")?.addEventListener("click", (event) => {
   event.stopPropagation();
-  enterStudio();
+  enterStudio({ playBoot: true });
 });
 
-bootScreen?.addEventListener("click", enterStudio);
+bootScreen?.addEventListener("click", () => {
+  enterStudio({ playBoot: true });
+});
+
+document.querySelectorAll(".js-interlude").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleInterlude();
+  });
+});
 
 document.querySelectorAll(".js-about").forEach((button) => {
   button.addEventListener("click", () => {
