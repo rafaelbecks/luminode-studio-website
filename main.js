@@ -4,9 +4,9 @@ const projects = {
     code: "LS-001",
     title: "MUSGO",
     description:
-      "Playground for generative organisms: procedural morphogenesis, material textures, and saveable specimen state (.organism files).",
+      "Un espacio de juego para organismos generativos: morfogénesis procedural, texturas materiales y especímenes que pueden guardarse y volver a mutar.",
     detail:
-      "Procedural families in the morphogenesis UI: torus / torus knot, minimal surfaces (Chen–Gackstätter, López–Ros), Gielis superformula, Baschet leaf, L-system organism, DLA (moss / coral), and loaded GLB.",
+      "",
     url: "https://musgo.luminode.studio/",
     repo: "https://github.com/rafaelbecks/musgo",
     screenshots: [
@@ -36,9 +36,10 @@ const projects = {
     index: "LS-002 / SINTETIZADOR VISUAL",
     code: "LS-002",
     title: "G.L.O.W.",
-    description: "A generative visual instrument for composing light with geometry.",
+    description:
+      "Un sintetizador visual abierto para componer luz con geometría y crear estructuras que evolucionan en tiempo real.",
     detail:
-      "G.L.O.W. is an open-source visual instrument for creating evolving geometric compositions in real time. Build scenes from Luminodes, small generative drawing systems, and make them move, oscillate, rotate and respond to sound, MIDI or internal generators.",
+      "Pequeños sistemas de dibujo llamados Luminodes se combinan, desplazan y responden al sonido, MIDI o generadores internos. La imagen no es fija: se interpreta.",
     url: "https://glow.luminode.studio/",
     repo: "https://github.com/rafaelbecks/glow",
     screenshots: [
