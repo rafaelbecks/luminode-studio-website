@@ -34,11 +34,13 @@
 
 html {
   background: #000;
+  height: 100%;
 }
 
 body {
   min-width: 320px;
   min-height: 100svh;
+  min-height: 100dvh;
   margin: 0;
   overflow: hidden;
   background: transparent;
@@ -91,6 +93,7 @@ a:focus-visible {
   position: relative;
   z-index: 3;
   min-height: 100svh;
+  min-height: 100dvh;
   isolation: isolate;
 }
 
@@ -99,7 +102,7 @@ a:focus-visible {
 .music {
   position: absolute;
   inset: 0;
-  min-height: 100svh;
+  min-height: 100%;
 }
 
 .boot-screen {
@@ -595,13 +598,107 @@ a:focus-visible {
   background: transparent;
   cursor: grab;
   isolation: isolate;
+  perspective: 1200px;
   transform:
     translate3d(var(--drag-x), var(--drag-y), 0)
     rotate(var(--angle));
   transform-origin: center center;
   transition:
     transform 420ms var(--ease-out),
-    filter 420ms ease;
+    filter 420ms ease,
+    width 520ms var(--ease-out),
+    aspect-ratio 520ms var(--ease-out);
+}
+
+.minidisc__flipper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 680ms var(--ease-out);
+}
+
+.minidisc.is-flipped .minidisc__flipper {
+  transform: rotateY(180deg);
+  pointer-events: none;
+}
+
+.minidisc__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 4%;
+  overflow: hidden;
+}
+
+.minidisc__face--back {
+  display: grid;
+  background: #000;
+  transform: rotateY(180deg);
+}
+
+.minidisc__embed-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  border-radius: 4%;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.minidisc.is-flipped.is-embed-live .minidisc__embed-slot {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.minidisc.is-flipped.is-embed-live .minidisc__flipper {
+  visibility: hidden;
+}
+
+.minidisc__embed {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+  color-scheme: dark;
+  pointer-events: auto;
+}
+
+.minidisc__flip-close {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 6;
+  display: none;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--dim);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 200;
+  line-height: 1;
+  transform: translate(-50%, calc(100% + 14px));
+  pointer-events: auto;
+  transition: color 180ms ease;
+}
+
+.minidisc.is-flipped .minidisc__flip-close {
+  display: grid;
+}
+
+.minidisc__flip-close:hover,
+.minidisc__flip-close:focus-visible {
+  color: var(--paper);
+  outline: none;
 }
 
 .release.is-dragging {
@@ -640,6 +737,10 @@ a:focus-visible {
   background: #000;
   filter: blur(14px);
   opacity: 0.7;
+}
+
+.minidisc.is-flipped .minidisc__shadow {
+  opacity: 0;
 }
 
 .minidisc__shell {
@@ -822,6 +923,10 @@ a:focus-visible {
   pointer-events: none;
 }
 
+.disk-hoist .minidisc.is-focused {
+  pointer-events: auto;
+}
+
 .disk.is-focused {
   position: fixed;
   left: 50%;
@@ -848,24 +953,46 @@ a:focus-visible {
 .minidisc.is-focused {
   position: fixed;
   left: 50%;
-  top: max(32px, 10vh);
+  top: max(32px, 8vh);
   z-index: 1;
   width: min(64vw, 280px);
   min-width: 0;
   height: auto;
   aspect-ratio: 900 / 863;
   margin: 0;
-  cursor: default;
+  cursor: pointer;
   transform: translateX(-50%) rotate(-2deg);
   filter: drop-shadow(0 28px 40px rgba(0, 0, 0, 0.55));
-  pointer-events: none;
-  transition: none;
+  pointer-events: auto;
+  transition:
+    width 520ms var(--ease-out),
+    aspect-ratio 520ms var(--ease-out),
+    top 520ms var(--ease-out),
+    filter 420ms ease;
 }
 
 .minidisc.is-focused:hover,
 .minidisc.is-focused:focus-visible {
   transform: translateX(-50%) rotate(-2deg);
   filter: drop-shadow(0 28px 40px rgba(0, 0, 0, 0.55));
+}
+
+.minidisc.is-focused.is-flipped {
+  width: min(92vw, 400px);
+  aspect-ratio: 400 / 307;
+  top: max(20px, 5vh);
+  cursor: default;
+  transform: translateX(-50%) rotate(0deg);
+  filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.6));
+}
+
+.minidisc.is-focused.is-flipped:hover,
+.minidisc.is-focused.is-flipped:focus-visible {
+  transform: translateX(-50%) rotate(0deg);
+}
+
+.is-disc-flipped .drive__stage {
+  bottom: 48px;
 }
 
 .is-armed .release.is-armed {
@@ -1063,6 +1190,18 @@ a:focus-visible {
   letter-spacing: 0.02em;
   line-height: 1.45;
   text-wrap: pretty;
+}
+
+.drive__hint {
+  margin: -2px 0 0;
+  color: var(--dim);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+}
+
+.drive__hint[hidden] {
+  display: none;
 }
 
 .drive__launch,
@@ -1489,14 +1628,37 @@ a:focus-visible {
 }
 
 @media (max-width: 760px) {
+  html,
   body {
-    overflow: auto;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .site-shell {
+    height: 100%;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .boot-screen {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    min-height: 0;
   }
 
   .archive,
   .music {
-    position: relative;
-    min-height: 100svh;
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    height: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .archive__hint {
@@ -1561,6 +1723,10 @@ a:focus-visible {
 
   .modal__socials {
     order: 2;
+  }
+
+  .minidisc.is-focused.is-flipped {
+    width: min(94vw, 400px);
   }
 }
 

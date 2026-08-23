@@ -41,6 +41,7 @@ const releases = {
     description:
       "a compilation of improvisations, loops, and sequences driven by random sources.",
     url: "https://dormidos.bandcamp.com/album/in-permanent-sequences",
+    albumId: "2698472870",
     launchLabel: "bandcamp",
   },
   "na-ves-oscillations": {
@@ -48,6 +49,7 @@ const releases = {
     title: "naïves oscillations",
     description: "a naive perspective of sound-shaping with synthesizers.",
     url: "https://dormidos.bandcamp.com/album/na-ves-oscillations",
+    albumId: "3400351678",
     launchLabel: "bandcamp",
   },
   "computer-perspective": {
@@ -56,6 +58,7 @@ const releases = {
     description:
       "“computer perspective” is a compilation of compositions inspired by both technology and nature.",
     url: "https://dormidos.bandcamp.com/album/computer-perspective",
+    albumId: "920787767",
     launchLabel: "bandcamp",
   },
   "sonidos-incandescentes": {
@@ -64,6 +67,7 @@ const releases = {
     description:
       "sonidos incandescentes es una selección de composiciones inspiradas en poemas de Rafael Cadenas.",
     url: "https://dormidos.bandcamp.com/album/sonidos-incandescentes",
+    albumId: "3182473626",
     launchLabel: "bandcamp",
   },
 };
@@ -87,6 +91,7 @@ const driveTitle = document.querySelector(".js-drive-title");
 const driveDescription = document.querySelector(".js-drive-description");
 const driveLaunch = document.querySelector(".js-drive-launch");
 const driveInfo = document.querySelector(".js-drive-info");
+const driveHint = document.querySelector(".js-drive-hint");
 
 let hasEntered = false;
 let isLaunching = false;
@@ -102,6 +107,7 @@ let dragState = null;
 let currentView = "archive";
 let bootAudio = null;
 let interludeAudio = null;
+let isDiscFlipped = false;
 
 document.querySelectorAll(".js-year").forEach((node) => {
   node.textContent = String(new Date().getFullYear());
@@ -341,6 +347,106 @@ function finishDiskAnimation(disk, { settleFocused = false } = {}) {
   disk.style.visibility = "";
 }
 
+function bandcampEmbedSrc(albumId) {
+  return (
+    "https://bandcamp.com/EmbeddedPlayer/album=" +
+    encodeURIComponent(albumId) +
+    "/size=large/bgcol=000000/linkcol=6dff5c/artwork=small/transparent=true/"
+  );
+}
+
+function clearReleaseFlip(disk = activeDisk) {
+  isDiscFlipped = false;
+  body.classList.remove("is-disc-flipped");
+  const flipper = disk?.querySelector(".minidisc__flipper");
+  if (flipper) flipper.style.transition = "none";
+  disk?.classList.remove("is-flipped", "is-embed-live");
+  disk?.querySelector(".minidisc__embed-slot")?.remove();
+  if (flipper) {
+    void flipper.offsetWidth;
+    flipper.style.transition = "";
+  }
+}
+
+function unflipReleaseEmbed() {
+  if (!isDiscFlipped || !activeDisk) return;
+  clearReleaseFlip(activeDisk);
+}
+
+function ensureFlipClose(disk) {
+  let button = disk.querySelector(".js-flip-close");
+  if (button) return button;
+
+  button = document.createElement("button");
+  button.type = "button";
+  button.className = "minidisc__flip-close js-flip-close";
+  button.setAttribute("aria-label", "Cerrar reproductor");
+  button.textContent = "×";
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    unflipReleaseEmbed();
+  });
+  disk.appendChild(button);
+  return button;
+}
+
+function ensureEmbedSlot(disk, item) {
+  let slot = disk.querySelector(".minidisc__embed-slot");
+  if (!slot) {
+    slot = document.createElement("div");
+    slot.className = "minidisc__embed-slot";
+    disk.appendChild(slot);
+  }
+
+  let iframe = slot.querySelector(".minidisc__embed");
+  if (!iframe) {
+    iframe = document.createElement("iframe");
+    iframe.className = "minidisc__embed";
+    iframe.title = `${item.title} — Bandcamp`;
+    iframe.loading = "lazy";
+    iframe.setAttribute("seamless", "");
+    iframe.allow = "autoplay *; clipboard-write *; encrypted-media *";
+    iframe.src = bandcampEmbedSrc(item.albumId);
+    slot.appendChild(iframe);
+  }
+
+  return slot;
+}
+
+function flipReleaseEmbed() {
+  if (
+    !activeDisk ||
+    activeItemKind !== "release" ||
+    isAnimatingDisk ||
+    isLaunching ||
+    isDiscFlipped ||
+    !activeDisk.classList.contains("is-focused")
+  ) {
+    return;
+  }
+
+  const item = releases[activeItemKey];
+  if (!item?.albumId) return;
+
+  // Keep the iframe outside the 3D flip tree — browsers block clicks on
+  // iframes nested under preserve-3d / rotateY.
+  ensureEmbedSlot(activeDisk, item);
+  ensureFlipClose(activeDisk);
+  isDiscFlipped = true;
+  body.classList.add("is-disc-flipped");
+  activeDisk.classList.add("is-flipped");
+
+  const flipper = activeDisk.querySelector(".minidisc__flipper");
+  const reveal = () => activeDisk?.classList.add("is-embed-live");
+  if (flipper) {
+    flipper.addEventListener("transitionend", reveal, { once: true });
+    window.setTimeout(reveal, 720);
+  } else {
+    reveal();
+  }
+}
+
 async function openDrive(disk) {
   if (isLaunching || !hasEntered || isAnimatingDisk || activeDisk) return;
 
@@ -392,8 +498,9 @@ async function openDrive(disk) {
   driveCode.textContent = kind === "release" ? "" : item.index;
   driveCode.hidden = kind === "release";
   driveTitle.textContent = item.title;
-  driveDescription.textContent = item.description;
   driveDescription.hidden = false;
+  driveDescription.replaceChildren(item.description);
+  if (driveHint) driveHint.hidden = kind !== "release";
   driveLaunch.dataset.url = item.url;
   driveLaunch.dataset.project = kind === "project" ? itemKey : "";
   driveLaunch.dataset.release = kind === "release" ? itemKey : "";
@@ -415,6 +522,12 @@ async function openDrive(disk) {
 
   drive.classList.add("is-open");
   isAnimatingDisk = false;
+  if (kind === "release") {
+    activeDisk?.setAttribute(
+      "aria-label",
+      `Reproducir ${item.title} en Bandcamp`,
+    );
+  }
   driveLaunch.focus({ preventScroll: true });
 }
 
@@ -423,6 +536,7 @@ async function closeDrive() {
 
   isAnimatingDisk = true;
   const disk = activeDisk;
+  clearReleaseFlip(disk);
   const first = disk.getBoundingClientRect();
   const startTransform = readTransform(disk);
   const homeParent = diskHomeParent || diskSpacer?.parentNode;
@@ -483,6 +597,13 @@ async function closeDrive() {
     }
   }
 
+  if (disk.dataset.release && releases[disk.dataset.release]) {
+    disk.setAttribute(
+      "aria-label",
+      `Seleccionar ${releases[disk.dataset.release].title}`,
+    );
+  }
+
   diskHoist?.remove();
   diskHoist = null;
   diskHomeParent = null;
@@ -494,6 +615,7 @@ async function closeDrive() {
   if (driveInfo) driveInfo.hidden = false;
   driveCode.hidden = false;
   driveDescription.hidden = false;
+  if (driveHint) driveHint.hidden = true;
   driveLaunch.textContent = "iniciar";
 }
 
@@ -560,6 +682,28 @@ function onPointerDown(event) {
 }
 
 function onDiskClick(event) {
+  const disk = event.currentTarget;
+
+  if (
+    disk.classList.contains("is-focused") &&
+    activeDisk === disk &&
+    activeItemKind === "release"
+  ) {
+    // Embed / close control handle their own interaction.
+    if (
+      isDiscFlipped ||
+      event.target.closest(
+        "iframe, .minidisc__embed, .minidisc__embed-slot, .minidisc__face--back, .js-flip-close",
+      )
+    ) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    flipReleaseEmbed();
+    return;
+  }
+
   if (!isMobile()) return;
   if (
     !hasEntered ||
@@ -571,7 +715,6 @@ function onDiskClick(event) {
     return;
   }
 
-  const disk = event.currentTarget;
   if (!disk || disk.classList.contains("is-focused")) return;
   openDrive(disk);
 }
@@ -709,6 +852,22 @@ document.querySelectorAll(".js-select, .js-md-select").forEach((disk) => {
   disk.addEventListener("pointerup", onPointerUp);
   disk.addEventListener("pointercancel", onPointerUp);
   disk.addEventListener("click", onDiskClick);
+
+  if (disk.classList.contains("js-md-select")) {
+    disk.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      if (
+        disk.classList.contains("is-focused") &&
+        activeDisk === disk &&
+        activeItemKind === "release"
+      ) {
+        if (!isDiscFlipped) flipReleaseEmbed();
+        return;
+      }
+      if (!activeDisk) openDrive(disk);
+    });
+  }
 });
 
 document.querySelector(".js-drive-dismiss").addEventListener("click", closeDrive);
