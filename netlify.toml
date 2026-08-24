@@ -1,6 +1,9 @@
 [build]
-  command = "git submodule update --init --recursive && npm run build"
+  command = "git lfs pull && git submodule update --init --recursive && npm run build"
   publish = "dist"
+
+[build.environment]
+  GIT_LFS_ENABLED = "true"
 
 [[redirects]]
   from = "/software"

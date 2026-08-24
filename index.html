@@ -547,14 +547,35 @@
               <a class="js-modal-doc" href="#" hidden>documento ↗</a>
             </nav>
           </div>
-          <div class="modal__gallery js-modal-gallery" hidden></div>
+          <div class="modal__media js-modal-media" hidden>
+            <div class="modal__stage">
+              <button
+                class="modal__media-nav modal__media-nav--prev js-media-prev"
+                type="button"
+                aria-label="Video anterior"
+              >
+                ‹
+              </button>
+              <div class="modal__player">
+                <video
+                  class="modal__video js-modal-video"
+                  controls
+                  playsinline
+                  preload="metadata"
+                ></video>
+              </div>
+              <button
+                class="modal__media-nav modal__media-nav--next js-media-next"
+                type="button"
+                aria-label="Video siguiente"
+              >
+                ›
+              </button>
+            </div>
+            <p class="modal__media-index js-media-index" aria-live="polite"></p>
+          </div>
         </div>
       </div>
-    </dialog>
-
-    <dialog class="lightbox" id="shot-lightbox" aria-label="Vista ampliada">
-      <button class="lightbox__close" type="button" aria-label="Cerrar">×</button>
-      <img class="lightbox__image js-lightbox-image" alt="" />
     </dialog>
 
     <div class="launch-status" role="status" aria-live="assertive">

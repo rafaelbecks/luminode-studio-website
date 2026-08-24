@@ -11,27 +11,16 @@ const projects = {
     ],
     url: "https://musgo.luminode.studio/",
     repo: "https://github.com/rafaelbecks/musgo",
-    screenshots: [
-      {
-        thumb: "/projects/musgo/gielis-anemona.webp",
-        src: "/projects/musgo/gielis-anemona.png",
-        alt: "Gielis superformula anemone",
-      },
-      {
-        thumb: "/projects/musgo/gielis-insecto.webp",
-        src: "/projects/musgo/gielis-insecto.png",
-        alt: "Gielis insect form",
-      },
-      {
-        thumb: "/projects/musgo/lsystem-anthropod.webp",
-        src: "/projects/musgo/lsystem-anthropod.png",
-        alt: "L-system anthropod",
-      },
-      {
-        thumb: "/projects/musgo/lsystem-bush.webp",
-        src: "/projects/musgo/lsystem-bush.png",
-        alt: "L-system bush",
-      },
+    videos: [
+      "/projects/musgo/videos/musgo-01.mp4",
+      "/projects/musgo/videos/musgo-02.mp4",
+      "/projects/musgo/videos/musgo-03.mp4",
+      "/projects/musgo/videos/musgo-04.mp4",
+      "/projects/musgo/videos/musgo-05.mp4",
+      "/projects/musgo/videos/musgo-06.mp4",
+      "/projects/musgo/videos/musgo-07.mp4",
+      "/projects/musgo/videos/musgo-08.mp4",
+      "/projects/musgo/videos/musgo-09.mp4",
     ],
   },
   glow: {
@@ -44,6 +33,14 @@ const projects = {
       "Inspirado en pioneros del arte computacional, busca hacer accesible la composición visual mediante módulos de luz geométricos (Luminodes), moduladores y herramientas interconectadas.",
     url: "https://glow.luminode.studio/",
     repo: "https://github.com/rafaelbecks/glow",
+    videos: [
+      "/projects/glow/videos/glow-01.mp4",
+      "/projects/glow/videos/glow-02.mp4",
+      "/projects/glow/videos/glow-03.mp4",
+      "/projects/glow/videos/glow-04.mp4",
+      "/projects/glow/videos/glow-05.mp4",
+      "/projects/glow/videos/glow-06.mp4",
+    ],
   },
   intemperie: {
     index: "LS-003 / INSTALACIÓN INTERACTIVA",
@@ -59,27 +56,10 @@ const projects = {
       href: "/projects/intemperie/topografias-intemperie.pdf",
       label: "documento ↗",
     },
-    screenshots: [
-      {
-        thumb: "/projects/intemperie/composition-01.webp",
-        src: "/projects/intemperie/composition-01.png",
-        alt: "Composición 1",
-      },
-      {
-        thumb: "/projects/intemperie/composition-02.webp",
-        src: "/projects/intemperie/composition-02.png",
-        alt: "Composición 2",
-      },
-      {
-        thumb: "/projects/intemperie/composition-03.webp",
-        src: "/projects/intemperie/composition-03.png",
-        alt: "Composición 3",
-      },
-      {
-        thumb: "/projects/intemperie/composition-04.webp",
-        src: "/projects/intemperie/composition-04.png",
-        alt: "Composición 4",
-      },
+    videos: [
+      "/projects/intemperie/videos/exploracion-01.mp4",
+      "/projects/intemperie/videos/exploracion-02.mp4",
+      "/projects/intemperie/videos/exploracion-03.mp4",
     ],
   },
 };
@@ -134,8 +114,6 @@ const music = document.querySelector(".music");
 const bootScreen = document.querySelector(".boot-screen");
 const aboutModal = document.querySelector("#about-modal");
 const projectModal = document.querySelector("#project-modal");
-const shotLightbox = document.querySelector("#shot-lightbox");
-const lightboxImage = document.querySelector(".js-lightbox-image");
 const launchName = document.querySelector(".js-launch-name");
 const drive = document.querySelector(".drive");
 const driveCode = document.querySelector(".js-drive-code");
@@ -293,24 +271,80 @@ function openDialog(dialog) {
   dialog.showModal();
 }
 
+let mediaPlaylist = [];
+let mediaIndex = 0;
+
+function getMediaElements() {
+  return {
+    mediaPane: projectModal?.querySelector(".js-modal-media"),
+    video: projectModal?.querySelector(".js-modal-video"),
+    indexLabel: projectModal?.querySelector(".js-media-index"),
+    prevBtn: projectModal?.querySelector(".js-media-prev"),
+    nextBtn: projectModal?.querySelector(".js-media-next"),
+    projectBody: projectModal?.querySelector(".modal__body--project"),
+    copyPane: projectModal?.querySelector(".js-modal-copy"),
+  };
+}
+
+function stopProjectMedia() {
+  const { video } = getMediaElements();
+  if (!video) return;
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+}
+
+function updateMediaNav() {
+  const { indexLabel, prevBtn, nextBtn } = getMediaElements();
+  const total = mediaPlaylist.length;
+  if (indexLabel) {
+    indexLabel.textContent = total ? `${mediaIndex + 1} / ${total}` : "";
+  }
+  const multi = total > 1;
+  if (prevBtn) prevBtn.hidden = !multi;
+  if (nextBtn) nextBtn.hidden = !multi;
+}
+
+function showProjectVideo(index, { autoplay = false } = {}) {
+  const { video } = getMediaElements();
+  if (!video || !mediaPlaylist.length) return;
+
+  mediaIndex =
+    ((index % mediaPlaylist.length) + mediaPlaylist.length) % mediaPlaylist.length;
+  const src = mediaPlaylist[mediaIndex];
+  const shouldPlay = autoplay || !video.paused;
+
+  video.src = src;
+  video.load();
+  updateMediaNav();
+
+  if (shouldPlay) {
+    video.play().catch(() => {});
+  }
+}
+
+function setupProjectMedia(project) {
+  const { mediaPane, projectBody } = getMediaElements();
+  mediaPlaylist = Array.isArray(project.videos) ? project.videos.filter(Boolean) : [];
+  mediaIndex = 0;
+
+  const hasMedia = mediaPlaylist.length > 0;
+  if (mediaPane) mediaPane.hidden = !hasMedia;
+  projectBody?.classList.toggle("is-text-only", !hasMedia);
+
+  if (!hasMedia) {
+    stopProjectMedia();
+    updateMediaNav();
+    return;
+  }
+
+  showProjectVideo(0, { autoplay: false });
+}
+
 function closeDialog(dialog) {
   if (dialog?.open) dialog.close();
-  if (dialog === projectModal) closeShotLightbox();
-}
-
-function openShotLightbox(src, alt = "") {
-  if (!shotLightbox || !lightboxImage) return;
-  lightboxImage.src = src;
-  lightboxImage.alt = alt;
-  if (!shotLightbox.open) shotLightbox.showModal();
-}
-
-function closeShotLightbox() {
-  if (!shotLightbox?.open) return;
-  shotLightbox.close();
-  if (lightboxImage) {
-    lightboxImage.removeAttribute("src");
-    lightboxImage.alt = "";
+  if (dialog === projectModal) {
+    stopProjectMedia();
   }
 }
 
@@ -342,31 +376,7 @@ function fillProjectModal(projectKey) {
     }),
   );
 
-  const gallery = projectModal.querySelector(".js-modal-gallery");
-  const projectBody = projectModal.querySelector(".modal__body--project");
-  const copyPane = projectModal.querySelector(".js-modal-copy");
-  const shots = Array.isArray(project.screenshots) ? project.screenshots : [];
-  gallery.replaceChildren();
-  gallery.hidden = shots.length === 0;
-  projectBody?.classList.toggle("is-text-only", shots.length === 0);
-  shots.forEach((shot) => {
-    const fullSrc = shot.src;
-    const thumbSrc = shot.thumb || shot.src;
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "modal__shot";
-    button.setAttribute("aria-label", `Ampliar: ${shot.alt || project.title}`);
-    const img = document.createElement("img");
-    img.src = thumbSrc;
-    img.alt = shot.alt || "";
-    img.loading = "lazy";
-    img.decoding = "async";
-    button.appendChild(img);
-    button.addEventListener("click", () =>
-      openShotLightbox(fullSrc, shot.alt || ""),
-    );
-    gallery.appendChild(button);
-  });
+  setupProjectMedia(project);
 
   const openLink = projectModal.querySelector(".js-modal-open");
   const repoLink = projectModal.querySelector(".js-modal-repo");
@@ -391,13 +401,12 @@ function fillProjectModal(projectKey) {
     docLink.removeAttribute("download");
   }
 
+  const { copyPane } = getMediaElements();
   if (copyPane) copyPane.scrollTop = 0;
-  if (gallery) gallery.scrollTop = 0;
 
   openDialog(projectModal);
 
   if (copyPane) copyPane.scrollTop = 0;
-  if (gallery) gallery.scrollTop = 0;
 }
 
 function clearDiskInlineStyles(disk) {
@@ -1022,19 +1031,19 @@ document.querySelectorAll(".modal").forEach((dialog) => {
   });
 });
 
-shotLightbox?.querySelector(".lightbox__close")?.addEventListener("click", () => {
-  closeShotLightbox();
+projectModal?.querySelector(".js-media-prev")?.addEventListener("click", () => {
+  if (mediaPlaylist.length < 2) return;
+  showProjectVideo(mediaIndex - 1, { autoplay: true });
 });
 
-shotLightbox?.addEventListener("click", (event) => {
-  if (event.target === shotLightbox) closeShotLightbox();
+projectModal?.querySelector(".js-media-next")?.addEventListener("click", () => {
+  if (mediaPlaylist.length < 2) return;
+  showProjectVideo(mediaIndex + 1, { autoplay: true });
 });
 
-shotLightbox?.addEventListener("close", () => {
-  if (lightboxImage) {
-    lightboxImage.removeAttribute("src");
-    lightboxImage.alt = "";
-  }
+projectModal?.querySelector(".js-modal-video")?.addEventListener("ended", () => {
+  if (mediaPlaylist.length < 2) return;
+  showProjectVideo(mediaIndex + 1, { autoplay: true });
 });
 
 applyRoute();

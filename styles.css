@@ -1268,8 +1268,8 @@ a:focus-visible {
 }
 
 #project-modal.modal {
-  width: min(1120px, calc(100vw - 36px));
-  max-height: min(820px, calc(100svh - 36px));
+  width: min(1480px, calc(100vw - 16px));
+  max-height: min(900px, calc(100svh - 16px));
 }
 
 .modal__body--project {
@@ -1292,7 +1292,7 @@ a:focus-visible {
   min-height: 0;
   flex-direction: column;
   overflow: auto;
-  padding: clamp(25px, 4vw, 44px);
+  padding: clamp(22px, 3.2vw, 36px) clamp(20px, 3vw, 32px);
   -webkit-overflow-scrolling: touch;
 }
 
@@ -1317,7 +1317,7 @@ a:focus-visible {
 }
 
 .modal__window--project {
-  height: min(820px, calc(100svh - 36px));
+  height: min(900px, calc(100svh - 16px));
 }
 
 .modal__header {
@@ -1451,53 +1451,90 @@ a:focus-visible {
   color: #aaa9a4;
 }
 
-.modal__gallery {
+.modal__media {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: 1fr;
-  align-content: stretch;
+  grid-template-rows: minmax(0, 1fr) auto;
   align-self: stretch;
-  gap: 10px;
+  gap: 12px;
   height: 100%;
   min-height: 0;
-  overflow: hidden;
   border-left: 1px solid var(--line);
-  padding: clamp(18px, 3vw, 28px);
+  padding: clamp(14px, 2vw, 22px) clamp(10px, 1.4vw, 16px);
   background: #050505;
 }
 
-.modal__gallery[hidden] {
+.modal__media[hidden] {
   display: none;
 }
 
-.modal__shot {
+.modal__stage {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 0;
+}
+
+.modal__player {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+}
+
+.modal__video {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 0;
-  margin: 0;
+  max-height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.modal__media-nav {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  place-items: center;
   border: 1px solid var(--line);
   padding: 0;
-  overflow: hidden;
-  background: #111;
-  cursor: zoom-in;
-}
-
-.modal__shot img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 200;
+  line-height: 1;
   transition:
-    transform 420ms var(--ease-out),
-    filter 280ms ease;
+    color 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease;
 }
 
-.modal__shot:hover img,
-.modal__shot:focus-visible img {
-  transform: scale(1.03);
-  filter: brightness(1.06);
+.modal__media-nav:hover,
+.modal__media-nav:focus-visible {
+  color: var(--logo-node);
+  border-color: var(--paper);
+  background: rgba(236, 233, 223, 0.06);
+  outline: none;
+}
+
+.modal__media-nav[hidden] {
+  display: none;
+}
+
+.modal__media-index {
+  margin: 0;
+  color: var(--dim);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .modal__kicker {
@@ -1539,46 +1576,6 @@ a:focus-visible {
 
 .modal__links a[hidden] {
   display: none;
-}
-
-.lightbox {
-  width: min(1100px, calc(100vw - 28px));
-  max-height: calc(100svh - 28px);
-  margin: auto;
-  border: 0;
-  padding: 0;
-  overflow: visible;
-  background: transparent;
-  color: var(--paper);
-}
-
-.lightbox::backdrop {
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.lightbox__close {
-  position: fixed;
-  top: 18px;
-  right: 22px;
-  z-index: 2;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: var(--paper);
-  cursor: pointer;
-  font-size: 28px;
-  font-weight: 200;
-  line-height: 1;
-}
-
-.lightbox__image {
-  display: block;
-  width: 100%;
-  max-height: calc(100svh - 48px);
-  margin: 0 auto;
-  border: 1px solid var(--line);
-  object-fit: contain;
-  background: #050505;
 }
 
 .launch-status {
@@ -1837,7 +1834,7 @@ a:focus-visible {
 
   .modal__window--project {
     height: auto;
-    max-height: min(820px, calc(100svh - 36px));
+    max-height: min(900px, calc(100svh - 16px));
   }
 
   .modal__body--project {
@@ -1849,13 +1846,20 @@ a:focus-visible {
     overflow: visible;
   }
 
-  .modal__gallery {
+  .modal__media {
     border-left: 0;
     border-top: 1px solid var(--line);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: minmax(120px, 22vh);
     height: auto;
-    overflow: visible;
+    min-height: 240px;
+  }
+
+  .modal__stage {
+    gap: 6px;
+  }
+
+  .modal__player {
+    min-height: 220px;
+    aspect-ratio: 16 / 10;
   }
 
   .modal__portrait {
