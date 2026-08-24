@@ -1268,12 +1268,13 @@ a:focus-visible {
 }
 
 #project-modal.modal {
-  width: min(1480px, calc(100vw - 16px));
-  max-height: min(900px, calc(100svh - 16px));
+  width: min(1480px, calc(80vw - 16px));
+  max-height: min(900px, calc(92svh - 16px));
 }
 
 .modal__body--project {
   display: grid;
+  padding: clamp(25px, 5vw, 26px) !important;
   flex: 1;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: 0;
@@ -1453,13 +1454,12 @@ a:focus-visible {
 
 .modal__media {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
   align-self: stretch;
-  gap: 12px;
+  place-items: center;
   height: 100%;
   min-height: 0;
   border-left: 1px solid var(--line);
-  padding: clamp(14px, 2vw, 22px) clamp(10px, 1.4vw, 16px);
+  padding: clamp(14px, 2vw, 22px) clamp(12px, 1.6vw, 18px);
   background: #050505;
 }
 
@@ -1467,10 +1467,110 @@ a:focus-visible {
   display: none;
 }
 
+.modal__media.is-playing {
+  place-items: stretch;
+}
+
+.modal__media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+  overflow: auto;
+  min-height: 0;
+  max-height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal__media-grid[hidden] {
+  display: none;
+}
+
+.modal__thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  padding: 0;
+  background: #000;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    opacity 160ms ease;
+}
+
+.modal__thumb:hover,
+.modal__thumb:focus-visible {
+  border-color: var(--paper);
+  outline: none;
+}
+
+.modal__thumb-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.modal__thumb-label {
+  position: absolute;
+  left: 8px;
+  bottom: 7px;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
 .modal__stage {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 8px;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  min-height: 0;
+  height: 100%;
+}
+
+.modal__stage[hidden] {
+  display: none;
+}
+
+.modal__media-back {
+  justify-self: start;
+  border: 0;
+  padding: 0 2px;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.78;
+  transition:
+    color 160ms ease,
+    opacity 160ms ease;
+}
+
+.modal__media-back:hover,
+.modal__media-back:focus-visible {
+  color: var(--paper);
+  opacity: 1;
+  outline: none;
+}
+
+.modal__stage-row {
+  display: flex;
+  gap: 4px;
   align-items: center;
   min-height: 0;
 }
@@ -1478,6 +1578,7 @@ a:focus-visible {
 .modal__player {
   position: relative;
   display: grid;
+  flex: 1;
   min-width: 0;
   min-height: 0;
   place-items: center;
@@ -1497,30 +1598,25 @@ a:focus-visible {
 
 .modal__media-nav {
   display: grid;
-  width: 34px;
-  height: 34px;
+  width: 18px;
+  height: 36px;
   flex-shrink: 0;
   place-items: center;
-  border: 1px solid var(--line);
+  border: 0;
   padding: 0;
   background: transparent;
-  color: var(--paper);
+  color: var(--dim);
   cursor: pointer;
   font-family: var(--font-display);
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 200;
   line-height: 1;
-  transition:
-    color 160ms ease,
-    background 160ms ease,
-    border-color 160ms ease;
+  transition: color 160ms ease;
 }
 
 .modal__media-nav:hover,
 .modal__media-nav:focus-visible {
-  color: var(--logo-node);
-  border-color: var(--paper);
-  background: rgba(236, 233, 223, 0.06);
+  color: var(--paper);
   outline: none;
 }
 
@@ -1853,8 +1949,16 @@ a:focus-visible {
     min-height: 240px;
   }
 
+  .modal__media-grid {
+    padding-bottom: 4px;
+  }
+
   .modal__stage {
-    gap: 6px;
+    height: auto;
+  }
+
+  .modal__stage-row {
+    gap: 2px;
   }
 
   .modal__player {

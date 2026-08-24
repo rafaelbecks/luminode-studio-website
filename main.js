@@ -273,14 +273,18 @@ function openDialog(dialog) {
 
 let mediaPlaylist = [];
 let mediaIndex = 0;
+let mediaView = "grid";
 
 function getMediaElements() {
   return {
     mediaPane: projectModal?.querySelector(".js-modal-media"),
+    grid: projectModal?.querySelector(".js-media-grid"),
+    stage: projectModal?.querySelector(".js-media-stage"),
     video: projectModal?.querySelector(".js-modal-video"),
     indexLabel: projectModal?.querySelector(".js-media-index"),
     prevBtn: projectModal?.querySelector(".js-media-prev"),
     nextBtn: projectModal?.querySelector(".js-media-next"),
+    backBtn: projectModal?.querySelector(".js-media-back"),
     projectBody: projectModal?.querySelector(".modal__body--project"),
     copyPane: projectModal?.querySelector(".js-modal-copy"),
   };
@@ -305,6 +309,47 @@ function updateMediaNav() {
   if (nextBtn) nextBtn.hidden = !multi;
 }
 
+function setMediaView(view) {
+  const { grid, stage, mediaPane } = getMediaElements();
+  mediaView = view;
+  mediaPane?.classList.toggle("is-playing", view === "player");
+  if (grid) grid.hidden = view !== "grid";
+  if (stage) stage.hidden = view !== "player";
+}
+
+function renderMediaGrid() {
+  const { grid } = getMediaElements();
+  if (!grid) return;
+
+  grid.replaceChildren();
+  mediaPlaylist.forEach((src, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "modal__thumb";
+    button.setAttribute("role", "listitem");
+    button.setAttribute("aria-label", `Reproducir video ${index + 1}`);
+    button.dataset.index = String(index);
+
+    const preview = document.createElement("video");
+    preview.className = "modal__thumb-video";
+    preview.src = `${src}#t=0.1`;
+    preview.muted = true;
+    preview.playsInline = true;
+    preview.preload = "metadata";
+    preview.setAttribute("aria-hidden", "true");
+
+    const label = document.createElement("span");
+    label.className = "modal__thumb-label";
+    label.textContent = String(index + 1).padStart(2, "0");
+
+    button.append(preview, label);
+    button.addEventListener("click", () => {
+      showProjectVideo(index, { autoplay: true });
+    });
+    grid.append(button);
+  });
+}
+
 function showProjectVideo(index, { autoplay = false } = {}) {
   const { video } = getMediaElements();
   if (!video || !mediaPlaylist.length) return;
@@ -312,8 +357,9 @@ function showProjectVideo(index, { autoplay = false } = {}) {
   mediaIndex =
     ((index % mediaPlaylist.length) + mediaPlaylist.length) % mediaPlaylist.length;
   const src = mediaPlaylist[mediaIndex];
-  const shouldPlay = autoplay || !video.paused;
+  const shouldPlay = autoplay || (mediaView === "player" && !video.paused);
 
+  setMediaView("player");
   video.src = src;
   video.load();
   updateMediaNav();
@@ -321,6 +367,11 @@ function showProjectVideo(index, { autoplay = false } = {}) {
   if (shouldPlay) {
     video.play().catch(() => {});
   }
+}
+
+function showMediaGrid() {
+  stopProjectMedia();
+  setMediaView("grid");
 }
 
 function setupProjectMedia(project) {
@@ -334,17 +385,21 @@ function setupProjectMedia(project) {
 
   if (!hasMedia) {
     stopProjectMedia();
+    setMediaView("grid");
     updateMediaNav();
     return;
   }
 
-  showProjectVideo(0, { autoplay: false });
+  renderMediaGrid();
+  showMediaGrid();
+  updateMediaNav();
 }
 
 function closeDialog(dialog) {
   if (dialog?.open) dialog.close();
   if (dialog === projectModal) {
     stopProjectMedia();
+    setMediaView("grid");
   }
 }
 
@@ -1029,6 +1084,10 @@ document.querySelectorAll(".modal").forEach((dialog) => {
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) closeDialog(dialog);
   });
+});
+
+projectModal?.querySelector(".js-media-back")?.addEventListener("click", () => {
+  showMediaGrid();
 });
 
 projectModal?.querySelector(".js-media-prev")?.addEventListener("click", () => {
