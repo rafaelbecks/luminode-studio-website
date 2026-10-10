@@ -24,7 +24,7 @@ const MIME = {
   '.wav': 'audio/wav',
   '.pdf': 'application/pdf',
   '.wasm': 'application/wasm',
-  '.lente': 'application/json',
+  '.lentes': 'application/json',
   '.glow': 'application/json'
 }
 

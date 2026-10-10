@@ -144,6 +144,13 @@ async function serverFor (appInfo) {
   return server
 }
 
+/** Local apps learn where the host serves the site (LENTES's splash plays its GLOW scene). */
+function localUrl (page, base) {
+  const url = new URL(page, base)
+  if (studioUrl) url.searchParams.set('studio', studioUrl)
+  return url.href
+}
+
 async function openApp (id) {
   const appInfo = findApp(apps, id)
   if (!appInfo) return
@@ -154,7 +161,7 @@ async function openApp (id) {
   }
 
   const server = await serverFor(appInfo)
-  const url = server ? new URL(appInfo.operator, server.url).href : appInfo.remote
+  const url = server ? localUrl(appInfo.operator, server.url) : appInfo.remote
   if (!url) {
     dialog.showMessageBox(shellWindow, {
       type: 'info',
