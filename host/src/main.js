@@ -2,7 +2,6 @@ import { app, BrowserWindow, Menu, dialog, ipcMain, session, shell } from 'elect
 import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import net from 'node:net'
-import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { findApp, resolveApps } from './catalog.js'
@@ -14,14 +13,14 @@ const studioRoot = path.resolve(hostDir, '../..')
 
 /**
  * Development runs the site from the repo with Vite and finds apps beside
- * it. A packaged build serves the built site from its resources and looks in
- * LUMINODE_PROJECTS, ~/Projects, then the apps bundled with the build.
+ * it. A packaged build serves the built site from its resources and runs
+ * only the apps bundled with it (LENTES), unless LUMINODE_PROJECTS points at
+ * other checkouts. Every other diskette opens its public site.
  */
 function appRoots () {
   if (!app.isPackaged) return [path.resolve(studioRoot, '..')]
   return [
     process.env.LUMINODE_PROJECTS,
-    path.join(os.homedir(), 'Projects'),
     path.join(process.resourcesPath, 'apps')
   ]
 }

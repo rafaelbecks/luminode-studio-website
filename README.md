@@ -40,6 +40,6 @@ npm --prefix host run dist:mac
 
 The build lands in `host/release/` as `Luminode Studio-<version>-arm64.dmg` and a zip. It contains the built shelf, a copy of LENTES (taken from `../lente`, or from `LENTES_DIR`), and Syphon.framework. The icon is generated from `public/favicon.png`.
 
-The packaged app looks for instruments in `LUMINODE_PROJECTS`, then `~/Projects`, then its bundled copies. A working copy therefore takes priority over the bundled one. The project videos are not bundled; the app loads them from `https://luminode.studio` (set `LUMINODE_SITE` to change this).
+The packaged app bundles only LENTES, the instrument whose Syphon output works today. GLOW, MUSGO and the other diskettes open their public sites. Set `LUMINODE_PROJECTS` to a folder of checkouts to run local copies instead; a checkout there takes priority over the bundled LENTES. The project videos are not bundled; the app loads them from `https://luminode.studio` (set `LUMINODE_SITE` to change this).
 
 The mac build is ad-hoc signed and not notarized. The first time you open it, right-click the app and choose Open. Build the Windows installer on Windows with `npm --prefix host run dist:win`.
