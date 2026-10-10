@@ -19,6 +19,7 @@
   --musgo: #005534;
   --glow: #111111;
   --intemperie: #a01e1a;
+  --lente: #51cf66;
   --mint: #9dffc8;
   --glow-bg-dim: 0.35;
   --font-display: "Analo Grotesk", "Arial Narrow", "Helvetica Neue", sans-serif;
@@ -336,9 +337,9 @@ a:focus-visible {
 
 .disk-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: center;
-  width: min(100%, 1240px);
+  width: min(100%, 1560px);
   margin: 0 auto;
   gap: 12px;
 }
@@ -368,6 +369,10 @@ a:focus-visible {
 
 .project--intemperie {
   --disk-color: var(--intemperie);
+}
+
+.project--lente {
+  --disk-color: var(--lente);
 }
 
 .disk {
@@ -428,6 +433,10 @@ a:focus-visible {
 
 .project:nth-child(3) .disk {
   --angle: 10deg;
+}
+
+.project:nth-child(4) .disk {
+  --angle: -6deg;
 }
 
 .disk__shadow {
@@ -560,6 +569,27 @@ a:focus-visible {
   object-fit: cover;
   object-position: center 42%;
   transform: scale(1.04);
+}
+
+.project--lente .disk__art {
+  filter:
+    grayscale(1)
+    contrast(1.15)
+    brightness(1.12);
+}
+
+.project--lente .disk__sticker {
+  display: grid;
+  place-items: center;
+  background: #04140c;
+}
+
+.disk__word {
+  color: #d9ffe4;
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  line-height: 1;
 }
 
 .md-grid {

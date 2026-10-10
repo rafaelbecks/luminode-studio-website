@@ -62,6 +62,18 @@ const projects = {
       "/projects/intemperie/videos/exploracion-03.mp4",
     ],
   },
+  lente: {
+    index: "LS-004 / MEZCLADOR DE VIDEO",
+    code: "LS-004",
+    title: "LENTES",
+    description:
+      "Laboratorio de experimentación nodal para transformación de espectros y señales.",
+    detail:
+      "LENTES mezcla hasta tres fuentes —cámaras o shaders— en la GPU y las pasa por una cadena de efectos reordenable. Es un instrumento, no un editor de línea de tiempo.",
+    url: "https://github.com/rafaelbecks/lente",
+    repo: "https://github.com/rafaelbecks/lente",
+    videos: [],
+  },
 };
 
 const releases = {
@@ -820,8 +832,9 @@ function confirmLaunch() {
     activeItemKind === "release"
       ? releases[activeItemKey]
       : projects[activeItemKey];
-  const url = driveLaunch.dataset.url || item?.url;
-  if (!url) return;
+  const url = driveLaunch.dataset.url || item?.url || "";
+  const host = window.luminodeHost;
+  if (!url && !host?.launch) return;
 
   isLaunching = true;
   closeDialog(aboutModal);
@@ -832,6 +845,18 @@ function confirmLaunch() {
   activeDisk?.classList.add("is-launching");
 
   window.setTimeout(() => {
+    if (host?.launch) {
+      host.launch({
+        kind: activeItemKind,
+        id: activeItemKey,
+        url,
+      });
+      isLaunching = false;
+      body.classList.remove("is-launching");
+      drive.classList.remove("is-launching");
+      activeDisk?.classList.remove("is-launching");
+      return;
+    }
     window.location.assign(url);
   }, 1200);
 }

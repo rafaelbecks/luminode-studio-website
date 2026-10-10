@@ -1,0 +1,108 @@
+{
+  "name": "luminode-host",
+  "productName": "Luminode Studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Luminode Studio desktop host. Opens the studio shelf and publishes app output through Syphon or Spout.",
+  "main": "src/main.js",
+  "author": "Rafael Becerra",
+  "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test \"test/*.test.js\"",
+    "prepare-build": "node scripts/prepare-build.mjs",
+    "dist": "npm run prepare-build && electron-builder",
+    "dist:mac": "npm run prepare-build && electron-builder --mac",
+    "dist:win": "npm run prepare-build && electron-builder --win"
+  },
+  "dependencies": {
+    "@napolab/texture-bridge-renderer": "0.15.0"
+  },
+  "devDependencies": {
+    "electron": "44.7.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "studio.luminode.host",
+    "productName": "Luminode Studio",
+    "copyright": "© 2026 Rafael Becerra",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**",
+      "package.json",
+      "!node_modules/@napolab/texture-bridge-darwin-arm64/Syphon.framework${/*}"
+    ],
+    "extraResources": [
+      {
+        "from": "../dist",
+        "to": "site",
+        "filter": [
+          "**/*",
+          "!**/*.mp4"
+        ]
+      },
+      {
+        "from": "build/apps",
+        "to": "apps"
+      }
+    ],
+    "asarUnpack": [
+      "node_modules/@napolab/texture-bridge*/**"
+    ],
+    "mac": {
+      "category": "public.app-category.video",
+      "icon": "build/icon.icns",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "extraFiles": [
+        {
+          "from": "build/Syphon.framework",
+          "to": "Frameworks/Syphon.framework"
+        }
+      ],
+      "extendInfo": {
+        "NSCameraUsageDescription": "Luminode Studio instruments use cameras as video sources.",
+        "NSMicrophoneUsageDescription": "Luminode Studio instruments can react to audio input."
+      }
+    },
+    "dmg": {
+      "title": "Luminode Studio"
+    },
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

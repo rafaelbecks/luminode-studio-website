@@ -9,7 +9,10 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "node --check main.js"
+    "check": "node --check main.js",
+    "host": "npm --prefix host start",
+    "host:install": "npm --prefix host install",
+    "host:test": "npm --prefix host test"
   },
   "devDependencies": {
     "playwright": "^1.49.0",
