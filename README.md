@@ -23,7 +23,7 @@ npm run host:install
 npm run host
 ```
 
-The shelf runs from this repo. Starting a diskette opens the local project when it exists beside this repository (`../lente`, `../glow`, and so on). Otherwise it opens the public site in its own window. Music diskettes open Bandcamp outside the host.
+The shelf runs from this repo. Starting a diskette opens the local project when it exists beside this repository (`../lente`, `../glow`, `../resonant-torus` for MUSGO). Otherwise it opens the public site in its own window. Music diskettes open Bandcamp outside the host. Inside the host the shelf is a still page: the GLOW scene that plays behind the website is not loaded.
 
 **Output → Send to Syphon** (Cmd+Shift+P; Spout on Windows) publishes the focused instrument through [electron-texture-bridge](https://github.com/naporin0624/electron-texture-bridge). The host sends only the program canvas, not the operator window: it loads the `output` page declared in the app's `luminode.app.json` offscreen and follows its size. An app without an output page cannot be published. Closing the instrument stops the stream.
 

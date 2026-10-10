@@ -49,6 +49,16 @@ body {
   font-family: var(--font-mono);
 }
 
+/* The desktop host skips the live GLOW scene so the shelf stays a still page. */
+body.is-plain {
+  background: #050505;
+}
+
+body.is-plain .crt,
+body.is-plain .noise {
+  display: none;
+}
+
 .glow-bg {
   position: fixed;
   inset: 0;

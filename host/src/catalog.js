@@ -6,7 +6,7 @@ export const KNOWN_APPS = [
   {
     id: 'musgo',
     name: 'MUSGO',
-    dirNames: ['musgo'],
+    dirNames: ['musgo', 'resonant-torus'],
     remote: 'https://musgo.luminode.studio/'
   },
   {

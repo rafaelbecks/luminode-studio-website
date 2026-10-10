@@ -155,6 +155,33 @@ document.querySelectorAll(".js-year").forEach((node) => {
   node.textContent = String(new Date().getFullYear());
 });
 
+/**
+ * The website plays a GLOW scene behind the diskettes. The host does not:
+ * that scene is a second WebGL app, and the shelf should stay a still page.
+ */
+function mountShelfBackground() {
+  if (window.luminodeHost) {
+    body.classList.add("is-plain");
+    return;
+  }
+
+  const frame = document.createElement("iframe");
+  frame.className = "glow-bg";
+  frame.src = "/glow/index.html?embed=1";
+  frame.title = "";
+  frame.setAttribute("aria-hidden", "true");
+  frame.tabIndex = -1;
+
+  const veil = document.createElement("div");
+  veil.className = "glow-bg__veil";
+  veil.setAttribute("aria-hidden", "true");
+
+  body.prepend(veil);
+  body.prepend(frame);
+}
+
+mountShelfBackground();
+
 function playBootSound() {
   if (!bootAudio) {
     bootAudio = new Audio("/audio/boot-sound.mp3");
