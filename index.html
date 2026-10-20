@@ -55,7 +55,7 @@
       <section class="archive" aria-labelledby="archive-title" inert>
         <header class="archive__header">
           <div>
-            <p class="archive__index">LNS / ARCHIVO / LS-001—004</p>
+            <p class="archive__index">LNS / ARCHIVO / LS-001—003</p>
             <h2 id="archive-title">
               <button
                 class="archive__brand js-home"
@@ -192,39 +192,6 @@
             </div>
           </article>
 
-          <article
-            class="project project--lente"
-            role="listitem"
-            data-angle="-6"
-          >
-            <button
-              class="disk js-select"
-              type="button"
-              data-project="lente"
-              data-url="https://github.com/rafaelbecks/lente"
-              aria-label="Seleccionar LENTES"
-            >
-              <span class="disk__shadow" aria-hidden="true"></span>
-              <span class="disk__shell" aria-hidden="true">
-                <img class="disk__art" src="/diskette.svg" alt="" draggable="false" />
-                <span class="disk__tint"></span>
-              </span>
-              <span class="disk__sticker" aria-hidden="true">
-                <span class="disk__word">LENTES</span>
-              </span>
-            </button>
-            <div class="project__meta">
-              <p><span>LS-004</span> LENTES</p>
-              <button
-                class="project__info js-project-info"
-                type="button"
-                data-project="lente"
-                aria-label="Información sobre LENTES"
-              >
-                <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
-              </button>
-            </div>
-          </article>
         </div>
 
         <footer class="archive__footer">
@@ -454,18 +421,24 @@
         ×
       </button>
       <div class="drive__stage">
-        <div class="drive__actions">
+        <div class="drive__lead">
+          <div class="drive__spacer js-drive-spacer" aria-hidden="true" hidden></div>
           <p class="drive__code js-drive-code"></p>
           <p class="drive__title js-drive-title"></p>
-          <p class="drive__description js-drive-description"></p>
           <button class="drive__launch js-drive-launch" type="button">
             iniciar
           </button>
           <p class="drive__hint js-drive-hint" hidden>toca el disco para escuchar</p>
-          <button class="drive__info js-drive-info" type="button">
-            info
-          </button>
         </div>
+        <div class="drive__copy">
+          <p class="drive__description js-drive-description"></p>
+          <div class="drive__detail js-drive-detail" hidden></div>
+          <nav class="drive__links js-drive-links" hidden aria-label="Recursos del proyecto"></nav>
+          <div class="drive__media js-drive-media" hidden></div>
+        </div>
+        <button class="drive__info js-drive-info" type="button" hidden>
+          info
+        </button>
       </div>
     </div>
 

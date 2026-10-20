@@ -19,7 +19,6 @@
   --musgo: #005534;
   --glow: #111111;
   --intemperie: #a01e1a;
-  --lente: #51cf66;
   --mint: #9dffc8;
   --glow-bg-dim: 0.35;
   --font-display: "Analo Grotesk", "Arial Narrow", "Helvetica Neue", sans-serif;
@@ -347,11 +346,11 @@ a:focus-visible {
 
 .disk-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: center;
-  width: min(100%, 1560px);
+  width: min(100%, 1280px);
   margin: 0 auto;
-  gap: 12px;
+  gap: 16px;
 }
 
 .project {
@@ -381,10 +380,6 @@ a:focus-visible {
   --disk-color: var(--intemperie);
 }
 
-.project--lente {
-  --disk-color: var(--lente);
-}
-
 .disk {
   --disk-clip: polygon(
     0% 2.44%,
@@ -405,7 +400,7 @@ a:focus-visible {
   );
   position: relative;
   display: grid;
-  width: min(72%, 310px);
+  width: min(72%, 265px);
   min-width: 160px;
   aspect-ratio: 592 / 616;
   place-items: center;
@@ -443,10 +438,6 @@ a:focus-visible {
 
 .project:nth-child(3) .disk {
   --angle: 10deg;
-}
-
-.project:nth-child(4) .disk {
-  --angle: -6deg;
 }
 
 .disk__shadow {
@@ -581,26 +572,6 @@ a:focus-visible {
   transform: scale(1.04);
 }
 
-.project--lente .disk__art {
-  filter:
-    grayscale(1)
-    contrast(1.15)
-    brightness(1.12);
-}
-
-.project--lente .disk__sticker {
-  display: grid;
-  place-items: center;
-  background: #04140c;
-}
-
-.disk__word {
-  color: #d9ffe4;
-  font-family: var(--font-display);
-  font-size: 15px;
-  letter-spacing: 0.14em;
-  line-height: 1;
-}
 
 .md-grid {
   display: grid;
@@ -984,10 +955,22 @@ a:focus-visible {
   transition: none;
 }
 
+.disk.is-focused.is-aside {
+  left: max(48px, 8vw);
+  top: max(64px, calc(50% - 120px));
+  width: min(24vw, 240px);
+  transform: rotate(-4deg);
+}
+
 .disk.is-focused:hover,
 .disk.is-focused:focus-visible {
   transform: translateX(-50%) rotate(-2deg);
   filter: drop-shadow(0 28px 40px rgba(0, 0, 0, 0.55));
+}
+
+.disk.is-focused.is-aside:hover,
+.disk.is-focused.is-aside:focus-visible {
+  transform: rotate(-4deg);
 }
 
 .minidisc.is-focused {
@@ -1044,7 +1027,7 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: min(72%, 310px);
+  width: min(72%, 265px);
   border-top: 1px solid var(--line);
   padding-top: 10px;
 }
@@ -1183,7 +1166,9 @@ a:focus-visible {
 .drive__stage {
   display: grid;
   justify-items: center;
+  gap: 10px;
   width: min(100%, 420px);
+  text-align: center;
   transform: translateY(18px);
   opacity: 0;
   transition:
@@ -1198,14 +1183,65 @@ a:focus-visible {
   opacity: 1;
 }
 
-.drive__actions {
+.drive__lead,
+.drive__copy {
+  display: contents;
+}
+
+.drive.is-project {
+  align-items: center;
+  justify-items: center;
+  padding: clamp(20px, 4vh, 36px) clamp(24px, 4vw, 48px);
+}
+
+.drive.is-project .drive__stage {
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(24px, 3.5vw, 40px);
+  row-gap: 0;
+  width: min(980px, 100%);
+  max-height: calc(100svh - 48px);
+  margin: 0 auto;
+  bottom: auto;
+  overflow: auto;
+  justify-items: stretch;
+  text-align: left;
+  -webkit-overflow-scrolling: touch;
+}
+
+.drive.is-project .drive__lead {
   display: grid;
   justify-items: center;
-  gap: 10px;
+  gap: 12px;
+  align-content: center;
+  justify-self: center;
   text-align: center;
 }
 
+.drive.is-project .drive__copy {
+  display: grid;
+  gap: 14px;
+  align-content: center;
+  min-width: 0;
+}
+
+.drive.is-project .drive__copy > * {
+  order: 0;
+}
+
+.drive__spacer {
+  width: min(24vw, 240px);
+  max-width: 100%;
+  aspect-ratio: 592 / 616;
+  pointer-events: none;
+}
+
+.drive__spacer[hidden] {
+  display: none;
+}
+
 .drive__code {
+  order: 1;
   margin: 0;
   color: var(--green);
   font-size: 10px;
@@ -1214,6 +1250,7 @@ a:focus-visible {
 }
 
 .drive__title {
+  order: 2;
   margin: 0;
   font-family: var(--font-display);
   font-size: clamp(28px, 6vw, 42px);
@@ -1222,7 +1259,12 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
+.drive.is-project .drive__title {
+  font-size: clamp(22px, 3.2vw, 34px);
+}
+
 .drive__description {
+  order: 3;
   max-width: 52ch;
   margin: 0 0 10px;
   color: var(--paper);
@@ -1232,7 +1274,78 @@ a:focus-visible {
   text-wrap: pretty;
 }
 
+.drive.is-project .drive__description {
+  max-width: none;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.8vw, 19px);
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+
+.drive__detail {
+  display: grid;
+  gap: 0.85em;
+  color: #b7b5ae;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.drive__detail[hidden],
+.drive__links[hidden],
+.drive__media[hidden] {
+  display: none;
+}
+
+.drive__detail p {
+  margin: 0;
+}
+
+.drive__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.drive__links a {
+  color: var(--paper);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.drive__links a:hover {
+  color: var(--green);
+}
+
+.drive__media {
+  width: 100%;
+  margin: 2px 0 0;
+}
+
+.drive__video-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.drive__video-cell {
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: #000;
+}
+
+.drive__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
 .drive__hint {
+  order: 5;
   margin: -2px 0 0;
   color: var(--dim);
   font-size: 10px;
@@ -1260,8 +1373,13 @@ a:focus-visible {
 }
 
 .drive__launch {
+  order: 4;
   background: var(--paper);
   color: #000;
+}
+
+.drive.is-project .drive__launch {
+  margin-top: 4px;
 }
 
 .drive__launch:hover {
@@ -1752,7 +1870,7 @@ a:focus-visible {
   filter: drop-shadow(0 36px 48px rgba(0, 0, 0, 0.7));
 }
 
-.is-launching .drive__actions {
+.is-launching .drive__stage {
   opacity: 0;
   transition: opacity 240ms ease;
 }
@@ -2018,6 +2136,34 @@ a:focus-visible {
 
   .minidisc.is-focused.is-flipped {
     width: min(94vw, 400px);
+  }
+
+  .drive.is-project {
+    align-items: stretch;
+    padding: 16px 16px max(18px, 3vh);
+  }
+
+  .drive.is-project .drive__stage {
+    grid-template-columns: 1fr;
+    width: min(100%, 520px);
+    max-height: calc(100svh - 32px);
+    column-gap: 0;
+    row-gap: 14px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .drive.is-project .drive__copy {
+    width: 100%;
+    text-align: left;
+  }
+
+  .drive__spacer {
+    width: min(42vw, 170px);
+  }
+
+  .drive__video-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

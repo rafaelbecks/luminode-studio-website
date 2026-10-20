@@ -62,18 +62,6 @@ const projects = {
       "/projects/intemperie/videos/exploracion-03.mp4",
     ],
   },
-  lente: {
-    index: "LS-004 / MEZCLADOR DE VIDEO",
-    code: "LS-004",
-    title: "LENTES",
-    description:
-      "Laboratorio de experimentación nodal para transformación de espectros y señales.",
-    detail:
-      "LENTES mezcla hasta tres fuentes —cámaras o shaders— en la GPU y las pasa por una cadena de efectos reordenable. Es un instrumento, no un editor de línea de tiempo.",
-    url: "https://github.com/rafaelbecks/lente",
-    repo: "https://github.com/rafaelbecks/lente",
-    videos: [],
-  },
 };
 
 const releases = {
@@ -134,6 +122,10 @@ const driveDescription = document.querySelector(".js-drive-description");
 const driveLaunch = document.querySelector(".js-drive-launch");
 const driveInfo = document.querySelector(".js-drive-info");
 const driveHint = document.querySelector(".js-drive-hint");
+const driveDetail = document.querySelector(".js-drive-detail");
+const driveLinks = document.querySelector(".js-drive-links");
+const driveMedia = document.querySelector(".js-drive-media");
+const driveSpacerEl = document.querySelector(".js-drive-spacer");
 
 let hasEntered = false;
 let isLaunching = false;
@@ -519,17 +511,146 @@ function readTransform(node) {
 
 function getFocusTarget(disk) {
   const isMini = disk?.classList.contains("minidisc");
+  const aside = !isMini;
+  const narrow = window.innerWidth <= 760;
   const aspect = isMini ? MD_ASPECT : DISK_ASPECT;
-  const width = Math.min(window.innerWidth * (isMini ? 0.64 : 0.72), isMini ? 280 : 300);
+  const fallbackWidth = aside
+    ? Math.min(window.innerWidth * (narrow ? 0.42 : 0.24), narrow ? 170 : 240)
+    : Math.min(window.innerWidth * (isMini ? 0.64 : 0.72), isMini ? 280 : 300);
+
+  if (aside && driveSpacerEl && !driveSpacerEl.hidden) {
+    const box = driveSpacerEl.getBoundingClientRect();
+    if (box.width > 40 && box.height > 40) {
+      return {
+        left: box.left,
+        top: box.top,
+        width: box.width,
+        height: box.height,
+        transform: narrow ? "rotate(-3deg)" : "rotate(-4deg)",
+      };
+    }
+  }
+
+  const width = fallbackWidth;
   const height = width * aspect;
+  const left = aside
+    ? narrow
+      ? Math.max(16, (window.innerWidth - width) / 2)
+      : Math.max(48, window.innerWidth * 0.08)
+    : (window.innerWidth - width) / 2;
+  const top = aside
+    ? narrow
+      ? Math.max(48, window.innerHeight * 0.08)
+      : Math.max(64, (window.innerHeight - height) / 2)
+    : Math.max(32, window.innerHeight * 0.1);
 
   return {
-    left: (window.innerWidth - width) / 2,
-    top: Math.max(32, window.innerHeight * 0.1),
+    left,
+    top,
     width,
     height,
-    transform: "rotate(-2deg)",
+    transform: aside ? (narrow ? "rotate(-3deg)" : "rotate(-4deg)") : "rotate(-2deg)",
   };
+}
+
+function detailParagraphs(detail) {
+  return Array.isArray(detail) ? detail : detail ? [detail] : [];
+}
+
+function clearDriveProjectPanel() {
+  drive?.classList.remove("is-project");
+  if (driveSpacerEl) driveSpacerEl.hidden = true;
+  if (driveDetail) {
+    driveDetail.hidden = true;
+    driveDetail.replaceChildren();
+  }
+  if (driveLinks) {
+    driveLinks.hidden = true;
+    driveLinks.replaceChildren();
+  }
+  if (driveMedia) {
+    driveMedia.hidden = true;
+    driveMedia.querySelectorAll("video").forEach((video) => {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    });
+    driveMedia.replaceChildren();
+  }
+}
+
+function fillDriveProjectPanel(item) {
+  if (!item) return;
+  drive?.classList.add("is-project");
+  if (driveSpacerEl) driveSpacerEl.hidden = false;
+
+  const paragraphs = detailParagraphs(item.detail);
+  if (driveDetail) {
+    driveDetail.hidden = paragraphs.length === 0;
+    driveDetail.replaceChildren(
+      ...paragraphs.map((text) => {
+        const p = document.createElement("p");
+        p.textContent = text;
+        return p;
+      }),
+    );
+  }
+
+  if (driveLinks) {
+    const links = [];
+    if (item.repo) {
+      links.push({ href: item.repo, label: "repositorio ↗" });
+    }
+    if (item.document?.href) {
+      links.push({
+        href: item.document.href,
+        label: item.document.label || "documento ↗",
+      });
+    }
+    driveLinks.hidden = links.length === 0;
+    driveLinks.replaceChildren(
+      ...links.map((link) => {
+        const a = document.createElement("a");
+        a.href = link.href;
+        a.target = "_blank";
+        a.rel = "noreferrer";
+        a.textContent = link.label;
+        return a;
+      }),
+    );
+  }
+
+  if (driveMedia) {
+    const videos = Array.isArray(item.videos) ? item.videos.filter(Boolean) : [];
+    driveMedia.hidden = videos.length === 0;
+    driveMedia.replaceChildren();
+    if (!videos.length) return;
+
+    const grid = document.createElement("div");
+    grid.className = "drive__video-grid";
+    videos.forEach((src) => {
+      const cell = document.createElement("div");
+      cell.className = "drive__video-cell";
+      const video = document.createElement("video");
+      video.className = "drive__video";
+      video.src = src;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.preload = "metadata";
+      video.setAttribute("playsinline", "");
+      video.setAttribute("muted", "");
+      cell.append(video);
+      grid.append(cell);
+    });
+    driveMedia.append(grid);
+
+    window.requestAnimationFrame(() => {
+      driveMedia.querySelectorAll("video").forEach((video) => {
+        video.play().catch(() => {});
+      });
+    });
+  }
 }
 
 function geometryKeyframe(box, transform) {
@@ -574,9 +695,15 @@ function finishDiskAnimation(disk, { settleFocused = false } = {}) {
 
   if (!settleFocused) {
     disk.classList.remove("is-focused");
+    clearDiskInlineStyles(disk);
+  } else if (disk.classList.contains("is-aside")) {
+    // Keep measured spacer geometry so the disk stays under the title column.
+    disk.style.height = "";
+    disk.style.transition = "";
+  } else {
+    clearDiskInlineStyles(disk);
   }
 
-  clearDiskInlineStyles(disk);
   disk.style.visibility = "";
 }
 
@@ -698,7 +825,6 @@ async function openDrive(disk) {
   const card = disk.closest(kind === "project" ? ".project" : ".release");
   const first = disk.getBoundingClientRect();
   const startTransform = readTransform(disk);
-  const target = getFocusTarget(disk);
 
   if (kind === "release") {
     const color = getComputedStyle(card).getPropertyValue("--md-color").trim();
@@ -738,11 +864,25 @@ async function openDrive(disk) {
   driveLaunch.dataset.project = kind === "project" ? itemKey : "";
   driveLaunch.dataset.release = kind === "release" ? itemKey : "";
   driveLaunch.textContent = item.launchLabel || "iniciar";
-  if (driveInfo) driveInfo.hidden = kind === "release";
+  if (driveInfo) driveInfo.hidden = true;
+
+  if (kind === "project") {
+    fillDriveProjectPanel(item);
+  } else {
+    clearDriveProjectPanel();
+  }
 
   drive.hidden = false;
+  drive.classList.add("is-open");
   body.classList.add("is-armed");
+  // Lay out the project stage before measuring the disk landing slot.
+  if (kind === "project") {
+    void drive.offsetWidth;
+  }
+
+  const target = getFocusTarget(disk);
   disk.classList.add("is-focused");
+  disk.classList.toggle("is-aside", kind === "project");
   placeDiskAt(disk, first, startTransform);
 
   await animateDisk(
@@ -753,7 +893,6 @@ async function openDrive(disk) {
 
   finishDiskAnimation(disk, { settleFocused: true });
 
-  drive.classList.add("is-open");
   isAnimatingDisk = false;
   if (kind === "release") {
     activeDisk?.setAttribute(
@@ -789,7 +928,7 @@ async function closeDrive() {
 
   disk.style.transition = "none";
   disk.style.visibility = "hidden";
-  disk.classList.remove("is-focused");
+  disk.classList.remove("is-focused", "is-aside");
   clearDiskInlineStyles(disk);
   disk.style.transition = "none";
 
@@ -837,6 +976,7 @@ async function closeDrive() {
     );
   }
 
+  clearDriveProjectPanel();
   diskHoist?.remove();
   diskHoist = null;
   diskHomeParent = null;
@@ -845,7 +985,7 @@ async function closeDrive() {
   activeItemKind = null;
   isAnimatingDisk = false;
   drive.hidden = true;
-  if (driveInfo) driveInfo.hidden = false;
+  if (driveInfo) driveInfo.hidden = true;
   driveCode.hidden = false;
   driveDescription.hidden = false;
   if (driveHint) driveHint.hidden = true;
