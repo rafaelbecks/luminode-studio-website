@@ -11,7 +11,34 @@
     <title>luminode studio</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
+    <link
+      rel="preload"
+      href="/fonts/AnaloGrotesk-Trial-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
     <link rel="stylesheet" href="/styles.css" />
+    <script>
+      (function () {
+        var done = false;
+        function ready() {
+          if (done) return;
+          done = true;
+          document.documentElement.classList.add("fonts-ready");
+        }
+
+        if (!document.fonts || !document.fonts.load) {
+          ready();
+          return;
+        }
+
+        document.fonts
+          .load('400 1em "Analo Grotesk"')
+          .then(ready, ready);
+        window.setTimeout(ready, 3000);
+      })();
+    </script>
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"
@@ -524,6 +551,43 @@
             </a>
           </nav>
         </div>
+      </div>
+    </dialog>
+
+    <dialog class="video-lightbox" id="video-lightbox" aria-label="Reproductor de video">
+      <div class="video-lightbox__shell">
+        <button
+          class="video-lightbox__close js-video-lightbox-close"
+          type="button"
+          aria-label="Cerrar"
+        >
+          ×
+        </button>
+        <div class="video-lightbox__stage">
+          <button
+            class="video-lightbox__nav video-lightbox__nav--prev js-video-lightbox-prev"
+            type="button"
+            aria-label="Video anterior"
+          >
+            ‹
+          </button>
+          <div class="video-lightbox__player">
+            <video
+              class="video-lightbox__video js-video-lightbox-video"
+              controls
+              playsinline
+              preload="metadata"
+            ></video>
+          </div>
+          <button
+            class="video-lightbox__nav video-lightbox__nav--next js-video-lightbox-next"
+            type="button"
+            aria-label="Video siguiente"
+          >
+            ›
+          </button>
+        </div>
+        <p class="video-lightbox__index js-video-lightbox-index" aria-live="polite"></p>
       </div>
     </dialog>
 

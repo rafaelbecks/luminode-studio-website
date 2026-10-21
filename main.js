@@ -111,6 +111,7 @@ const music = document.querySelector(".music");
 const bootScreen = document.querySelector(".boot-screen");
 const aboutModal = document.querySelector("#about-modal");
 const projectModal = document.querySelector("#project-modal");
+const videoLightbox = document.querySelector("#video-lightbox");
 const launchName = document.querySelector(".js-launch-name");
 const drive = document.querySelector(".drive");
 const driveCode = document.querySelector(".js-drive-code");
@@ -123,6 +124,10 @@ const driveDetail = document.querySelector(".js-drive-detail");
 const driveLinks = document.querySelector(".js-drive-links");
 const driveMedia = document.querySelector(".js-drive-media");
 const driveSpacerEl = document.querySelector(".js-drive-spacer");
+const lightboxVideo = videoLightbox?.querySelector(".js-video-lightbox-video");
+const lightboxIndex = videoLightbox?.querySelector(".js-video-lightbox-index");
+const lightboxPrev = videoLightbox?.querySelector(".js-video-lightbox-prev");
+const lightboxNext = videoLightbox?.querySelector(".js-video-lightbox-next");
 
 let hasEntered = false;
 let isLaunching = false;
@@ -554,7 +559,70 @@ function detailParagraphs(detail) {
   return Array.isArray(detail) ? detail : detail ? [detail] : [];
 }
 
+let lightboxPlaylist = [];
+let lightboxIndexPos = 0;
+
+function setDrivePreviewsPaused(paused) {
+  driveMedia?.querySelectorAll("video").forEach((video) => {
+    if (paused) {
+      video.pause();
+      return;
+    }
+    video.play().catch(() => {});
+  });
+}
+
+function updateLightboxNav() {
+  const total = lightboxPlaylist.length;
+  if (lightboxIndex) {
+    lightboxIndex.textContent = total ? `${lightboxIndexPos + 1} / ${total}` : "";
+  }
+  const multi = total > 1;
+  if (lightboxPrev) lightboxPrev.hidden = !multi;
+  if (lightboxNext) lightboxNext.hidden = !multi;
+}
+
+function showLightboxVideo(index, { autoplay = true } = {}) {
+  if (!lightboxVideo || !lightboxPlaylist.length) return;
+  lightboxIndexPos =
+    ((index % lightboxPlaylist.length) + lightboxPlaylist.length) %
+    lightboxPlaylist.length;
+  const shouldPlay =
+    autoplay || (videoLightbox?.open && !lightboxVideo.paused);
+  lightboxVideo.src = lightboxPlaylist[lightboxIndexPos];
+  lightboxVideo.load();
+  updateLightboxNav();
+  if (shouldPlay) {
+    lightboxVideo.play().catch(() => {});
+  }
+}
+
+function openVideoLightbox(videos, index = 0) {
+  lightboxPlaylist = Array.isArray(videos) ? videos.filter(Boolean) : [];
+  if (!videoLightbox || !lightboxPlaylist.length) return;
+
+  setDrivePreviewsPaused(true);
+  if (!videoLightbox.open) {
+    videoLightbox.showModal();
+  }
+  showLightboxVideo(index, { autoplay: true });
+}
+
+function closeVideoLightbox() {
+  if (!videoLightbox?.open) return;
+  lightboxVideo?.pause();
+  if (lightboxVideo) {
+    lightboxVideo.removeAttribute("src");
+    lightboxVideo.load();
+  }
+  videoLightbox.close();
+  lightboxPlaylist = [];
+  lightboxIndexPos = 0;
+  setDrivePreviewsPaused(false);
+}
+
 function clearDriveProjectPanel() {
+  closeVideoLightbox();
   drive?.classList.remove("is-project");
   if (driveSpacerEl) driveSpacerEl.hidden = true;
   if (driveDetail) {
@@ -625,9 +693,11 @@ function fillDriveProjectPanel(item) {
 
     const grid = document.createElement("div");
     grid.className = "drive__video-grid";
-    videos.forEach((src) => {
-      const cell = document.createElement("div");
+    videos.forEach((src, index) => {
+      const cell = document.createElement("button");
+      cell.type = "button";
       cell.className = "drive__video-cell";
+      cell.setAttribute("aria-label", `Ampliar video ${index + 1}`);
       const video = document.createElement("video");
       video.className = "drive__video";
       video.src = src;
@@ -637,7 +707,11 @@ function fillDriveProjectPanel(item) {
       video.preload = "metadata";
       video.setAttribute("playsinline", "");
       video.setAttribute("muted", "");
+      video.setAttribute("aria-hidden", "true");
       cell.append(video);
+      cell.addEventListener("click", () => {
+        openVideoLightbox(videos, index);
+      });
       grid.append(cell);
     });
     driveMedia.append(grid);
@@ -903,6 +977,7 @@ async function openDrive(disk) {
 async function closeDrive() {
   if (isLaunching || isAnimatingDisk || !activeDisk) return;
 
+  closeVideoLightbox();
   isAnimatingDisk = true;
   const disk = activeDisk;
   clearReleaseFlip(disk);
@@ -1292,6 +1367,51 @@ projectModal?.querySelector(".js-media-next")?.addEventListener("click", () => {
 projectModal?.querySelector(".js-modal-video")?.addEventListener("ended", () => {
   if (mediaPlaylist.length < 2) return;
   showProjectVideo(mediaIndex + 1, { autoplay: true });
+});
+
+videoLightbox?.querySelector(".js-video-lightbox-close")?.addEventListener("click", () => {
+  closeVideoLightbox();
+});
+
+videoLightbox?.addEventListener("click", (event) => {
+  if (event.target === videoLightbox) closeVideoLightbox();
+});
+
+videoLightbox?.addEventListener("close", () => {
+  lightboxVideo?.pause();
+  if (lightboxVideo) {
+    lightboxVideo.removeAttribute("src");
+    lightboxVideo.load();
+  }
+  lightboxPlaylist = [];
+  lightboxIndexPos = 0;
+  setDrivePreviewsPaused(false);
+});
+
+lightboxPrev?.addEventListener("click", () => {
+  if (lightboxPlaylist.length < 2) return;
+  showLightboxVideo(lightboxIndexPos - 1, { autoplay: true });
+});
+
+lightboxNext?.addEventListener("click", () => {
+  if (lightboxPlaylist.length < 2) return;
+  showLightboxVideo(lightboxIndexPos + 1, { autoplay: true });
+});
+
+lightboxVideo?.addEventListener("ended", () => {
+  if (lightboxPlaylist.length < 2) return;
+  showLightboxVideo(lightboxIndexPos + 1, { autoplay: true });
+});
+
+videoLightbox?.addEventListener("keydown", (event) => {
+  if (!videoLightbox.open || lightboxPlaylist.length < 2) return;
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    showLightboxVideo(lightboxIndexPos - 1, { autoplay: true });
+  } else if (event.key === "ArrowRight") {
+    event.preventDefault();
+    showLightboxVideo(lightboxIndexPos + 1, { autoplay: true });
+  }
 });
 
 applyRoute();
