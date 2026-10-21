@@ -6,8 +6,8 @@ const projects = {
     description:
       "Un playground para experimentar con sistemas orgánicos generativos, deformativos y modulables en 3D.",
     detail: [
-      "MUSGO (Morfogénesis de Unidades y Sistemas Generativos Orgánicos) explora la generación de organismos de forma procedural usando métodos como las superfórmulas de Gielis y los sistemas de Lindenmayer (L-systems), combinándolos con deformaciones, transformaciones y modulaciones dinámicas. Desde organismos y estructuras ramificadas hasta deformaciones de toros y geometrías que responden al movimiento.",
-      "Un espacio para experimentar con formas que pueden crecer, deformarse, oscilar y transformarse.",
+      "MUSGO (Morfogénesis de Unidades y Sistemas Generativos Orgánicos) explora la generación de organismos de forma procedural usando métodos como las superfórmulas de Gielis y los sistemas de Lindenmayer (L-systems), combinándolos con deformaciones, transformaciones y modulaciones dinámicas. ",
+    
     ],
     url: "https://musgo.luminode.studio/",
     repo: "https://github.com/rafaelbecks/musgo",
@@ -18,9 +18,6 @@ const projects = {
       "/projects/musgo/videos/musgo-04.mp4",
       "/projects/musgo/videos/musgo-05.mp4",
       "/projects/musgo/videos/musgo-06.mp4",
-      "/projects/musgo/videos/musgo-07.mp4",
-      "/projects/musgo/videos/musgo-08.mp4",
-      "/projects/musgo/videos/musgo-09.mp4",
     ],
   },
   glow: {

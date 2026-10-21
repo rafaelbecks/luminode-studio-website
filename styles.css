@@ -1374,12 +1374,10 @@ a:focus-visible {
 
 .drive__launch {
   order: 4;
+  margin-top: 8px;
+  padding: 9px 25px;
   background: var(--paper);
   color: #000;
-}
-
-.drive.is-project .drive__launch {
-  margin-top: 4px;
 }
 
 .drive__launch:hover {
