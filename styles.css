@@ -267,6 +267,8 @@ a:focus-visible {
 }
 
 .archive__header {
+  position: relative;
+  z-index: 4;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -320,6 +322,7 @@ a:focus-visible {
 }
 
 .icon-button {
+  position: relative;
   display: grid;
   width: 28px;
   height: 28px;
@@ -342,8 +345,39 @@ a:focus-visible {
   height: 20px;
 }
 
-.icon-button:hover {
+.icon-button:hover,
+.icon-button:focus-visible {
   color: var(--paper);
+}
+
+.icon-button::after {
+  content: attr(aria-label);
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 8px);
+  right: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  background: #070707;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 80ms ease;
+}
+
+.icon-button:focus-visible::after {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .icon-button:hover::after {
+    opacity: 1;
+  }
 }
 
 .engineering {
