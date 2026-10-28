@@ -370,10 +370,6 @@ a:focus-visible {
   transition: opacity 80ms ease;
 }
 
-.icon-button:focus-visible::after {
-  opacity: 1;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .icon-button:hover::after {
     opacity: 1;

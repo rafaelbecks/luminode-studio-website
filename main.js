@@ -271,7 +271,7 @@ function enterStudio({ replacePath = true, playBoot = false } = {}) {
         : currentView === "engineering"
           ? document.querySelector(".engineering .js-nav-archive")
           : document.querySelector(".archive .js-about");
-    focusTarget?.focus({ preventScroll: true });
+    focusTarget?.focus({ preventScroll: true, focusVisible: false });
   }, 80);
 }
 
