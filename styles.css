@@ -202,7 +202,7 @@ a:focus-visible {
   color: rgba(236, 233, 223, 0.82);
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: clamp(11px, 1.2vw, 14px);
+  font-size: clamp(13px, 1.4vw, 16px);
   letter-spacing: 0.06em;
   text-transform: lowercase;
   opacity: 0;
@@ -1158,7 +1158,7 @@ a:focus-visible {
 .release__meta p {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.04em;
   text-transform: lowercase;
 }
@@ -1334,7 +1334,7 @@ a:focus-visible {
 .project__meta p {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.07em;
 }
 
@@ -1354,7 +1354,7 @@ a:focus-visible {
   border-top: 1px solid var(--line);
   padding-top: 18px;
   color: #c5c2c2;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -1542,7 +1542,7 @@ a:focus-visible {
   max-width: 52ch;
   margin: 0 0 10px;
   color: var(--paper);
-  font-size: clamp(11px, 1.4vw, 13px);
+  font-size: clamp(13px, 1.5vw, 15px);
   letter-spacing: 0.02em;
   line-height: 1.45;
   text-wrap: pretty;
@@ -1561,7 +1561,7 @@ a:focus-visible {
   display: grid;
   gap: 0.85em;
   color: #b7b5ae;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.7;
 }
 
@@ -1848,7 +1848,7 @@ a:focus-visible {
 .modal__body {
   overflow: auto;
   padding: clamp(25px, 5vw, 52px);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.75;
 }
 
@@ -1857,6 +1857,7 @@ a:focus-visible {
 }
 
 .modal__body--about {
+  font-size: 13px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(24px, 4vw, 40px);
@@ -2188,7 +2189,7 @@ a:focus-visible {
   .archive__footer {
     flex-direction: column;
     gap: 8px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .archive__footer-end {
