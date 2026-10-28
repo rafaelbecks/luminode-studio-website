@@ -102,6 +102,14 @@
             >
               <ion-icon name="disc-outline" aria-hidden="true"></ion-icon>
             </a>
+            <a
+              class="icon-button js-nav-engineering"
+              href="/engineering"
+              aria-label="Engineering"
+              title="Engineering"
+            >
+              <ion-icon name="briefcase-outline" aria-hidden="true"></ion-icon>
+            </a>
             <button
               class="icon-button js-about"
               type="button"
@@ -252,6 +260,14 @@
               title="Archivo"
             >
               <ion-icon name="save-outline" aria-hidden="true"></ion-icon>
+            </a>
+            <a
+              class="icon-button js-nav-engineering"
+              href="/engineering"
+              aria-label="Engineering"
+              title="Engineering"
+            >
+              <ion-icon name="briefcase-outline" aria-hidden="true"></ion-icon>
             </a>
             <button
               class="icon-button js-about"
@@ -428,6 +444,244 @@
                 >dormidos.bandcamp.com</a
               >
             </p>
+            <button
+              class="ambient-toggle js-interlude"
+              type="button"
+              aria-label="Reproducir interlude"
+              aria-pressed="false"
+              title="interlude #1"
+            >
+              <ion-icon name="musical-notes-outline" aria-hidden="true"></ion-icon>
+            </button>
+          </div>
+        </footer>
+      </section>
+
+      <section class="engineering" aria-labelledby="engineering-title" inert>
+        <header class="archive__header engineering__header">
+          <div>
+            <p class="archive__index">LNS / INGENIERÍA / EN-001—006</p>
+          </div>
+          <div class="archive__actions">
+            <a
+              class="icon-button js-nav-archive"
+              href="/software"
+              aria-label="Archivo"
+              title="Archivo"
+            >
+              <ion-icon name="save-outline" aria-hidden="true"></ion-icon>
+            </a>
+            <a
+              class="icon-button js-nav-music"
+              href="/music"
+              aria-label="Música"
+              title="Música"
+            >
+              <ion-icon name="disc-outline" aria-hidden="true"></ion-icon>
+            </a>
+            <button
+              class="icon-button js-about"
+              type="button"
+              aria-label="¿Qué es Luminode Studio?"
+              title="¿Qué es Luminode Studio?"
+            >
+              <ion-icon name="prism-outline" aria-hidden="true"></ion-icon>
+            </button>
+          </div>
+          <h2 id="engineering-title" class="engineering__title">
+            <span class="visually-hidden">Selected Engineering Work</span>
+            <pre class="engineering__ascii" aria-hidden="true">           _           _           _                    _                      _                                  _
+          | |         | |         | |                  (_)                    (_)                                | |
+  ___  ___| | ___  ___| |_ ___  __| |   ___ _ __   __ _ _ _ __   ___  ___ _ __ _ _ __   __ _  __      _____  _ __| | __
+ / __|/ _ \ |/ _ \/ __| __/ _ \/ _` |  / _ \ '_ \ / _` | | '_ \ / _ \/ _ \ '__| | '_ \ / _` | \ \ /\ / / _ \| '__| |/ /
+ \__ \  __/ |  __/ (__| ||  __/ (_| | |  __/ | | | (_| | | | | |  __/  __/ |  | | | | | (_| |  \ V  V / (_) | |  |   &lt;
+ |___/\___|_|\___|\___|\__\___|\__,_|  \___|_| |_|\__, |_|_| |_|\___|\___|_|  |_|_| |_|\__, |   \_/\_/ \___/|_|  |_|\_\
+                                                   __/ |                                __/ |
+                                                  |___/                                |___/</pre>
+          </h2>
+        </header>
+
+        <div class="engineering__main">
+          <div class="engineering__intro">
+            <p>
+              I'm a software engineer and creative technologist with over a
+              decade of experience building software across education,
+              industrial systems, music technology, healthcare, and interactive
+              applications.
+            </p>
+            <p>
+              This selection highlights products and teams I've contributed to
+              professionally.
+            </p>
+          </div>
+
+          <div class="engineering__list">
+            <article class="work">
+              <div class="work__mark work__mark--stack">
+                <img src="/brands/engineering/beacon.svg" alt="" />
+              </div>
+              <div class="work__copy">
+                <p class="work__domain">Education / AI</p>
+                <h3 class="work__name">Beacon <span>Stride, Inc.</span></h3>
+                <p class="work__role">Senior Software Engineer · April 2026–present</p>
+                <p class="work__text">
+                  Contributed to an LLM-powered K–12 tutoring platform serving
+                  students, educators, guardians, and district administrators.
+                  Built React and TypeScript interfaces for real-time tutoring,
+                  image uploads, math input with OCR, session completion, and
+                  AI-assisted writing. Implemented content-safety and moderation
+                  workflows for text and uploaded images, along with supporting
+                  administrative tools and backend services.
+                </p>
+                <p class="work__tech">React · TypeScript</p>
+                <a
+                  class="work__link"
+                  href="https://beacon.tutoring.k12.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  >beacon.tutoring.k12.com</a
+                >
+              </div>
+            </article>
+
+            <article class="work">
+              <div class="work__mark">
+                <img src="/brands/engineering/scanreco.svg" alt="" />
+              </div>
+              <div class="work__copy">
+                <p class="work__domain">Industrial Systems / Connected Devices</p>
+                <h3 class="work__name">Scanreco</h3>
+                <p class="work__role">Senior Frontend Developer</p>
+                <p class="work__text">
+                  Contributed to tools for configuring industrial remote
+                  controls, including a 3D model configurator, production file
+                  generation, and a desktop application communicating with
+                  external hardware over Bluetooth Low Energy. Also worked on
+                  device communication workflows involving BLE, UART, and LZ4
+                  compression.
+                </p>
+                <p class="work__tech">Vue · Electron · BLE</p>
+                <a
+                  class="work__link"
+                  href="https://scanreco.com/industrial-remote-controls"
+                  target="_blank"
+                  rel="noreferrer"
+                  >scanreco.com</a
+                >
+              </div>
+            </article>
+
+            <article class="work">
+              <div class="work__mark">
+                <img src="/brands/engineering/elk.svg" alt="" />
+              </div>
+              <div class="work__copy">
+                <p class="work__domain">Music Technology / Audio Software</p>
+                <h3 class="work__name">Elk Audio</h3>
+                <p class="work__role">Senior Frontend Developer · June 2022–August 2024</p>
+                <p class="work__text">
+                  Worked on a web-based audio streaming platform using React,
+                  WebRTC, and Socket.IO, and developed a modular UI kit for
+                  audio plugin interfaces. Built and maintained a cross-platform
+                  Electron desktop application integrating frontend interfaces,
+                  local services, and audio processing tools through gRPC and
+                  WebSockets.
+                </p>
+                <p class="work__tech">React · WebRTC · Electron</p>
+                <a
+                  class="work__link"
+                  href="https://elk.audio/"
+                  target="_blank"
+                  rel="noreferrer"
+                  >elk.audio</a
+                >
+              </div>
+            </article>
+
+            <article class="work">
+              <div class="work__mark">
+                <img src="/brands/engineering/thoughtworks.svg" alt="" />
+              </div>
+              <div class="work__copy">
+                <p class="work__domain">Consulting / Mobility</p>
+                <h3 class="work__name">Thoughtworks</h3>
+                <p class="work__role">Senior Consultant Developer · Spain, hybrid · March 2021–May 2022</p>
+                <p class="work__text">
+                  Contributed to a mobility platform for people with
+                  disabilities, from the inception of a third-party insurance
+                  integration through features on both the interface and the
+                  backend. The work sat in a microservice architecture and
+                  included the path to production, event pipelines, and an
+                  accessibility-first interface.
+                </p>
+                <p class="work__tech">React · Node.js · Kafka</p>
+                <a
+                  class="work__link"
+                  href="https://www.thoughtworks.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  >thoughtworks.com</a
+                >
+              </div>
+            </article>
+
+            <article class="work">
+              <div class="work__mark">
+                <img src="/brands/engineering/akili.png" alt="" />
+              </div>
+              <div class="work__copy">
+                <p class="work__domain">Digital Therapeutics / Interactive Applications</p>
+                <h3 class="work__name">Akili Interactive</h3>
+                <p class="work__role">E3 UI React Developer · Belatrix Software / Globant</p>
+                <p class="work__text">
+                  Contributed interface work for Akili's game-based digital
+                  treatments. Built React Native screens for the iOS and Android
+                  apps and React features for the web app, including
+                  API-connected flows and in-product animation.
+                </p>
+                <p class="work__tech">React Native · React · Redux</p>
+                <a
+                  class="work__link"
+                  href="https://www.akiliinteractive.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  >akiliinteractive.com</a
+                >
+              </div>
+            </article>
+
+            <article class="work">
+              <div class="work__mark">
+                <img src="/brands/engineering/scene.svg" alt="" />
+              </div>
+              <div class="work__copy">
+                <p class="work__domain">Healthcare</p>
+                <h3 class="work__name">Scene Health</h3>
+                <p class="work__role">Software Engineer · March 2020–March 2021</p>
+                <p class="work__text">
+                  Contributed to a medication-support platform for patients and
+                  care teams — the company then known as emocha, now Scene
+                  Health. Built React and React Native interfaces, GraphQL data
+                  flows, and serverless services for treatment tracking and
+                  facility access.
+                </p>
+                <p class="work__tech">React · GraphQL · Node.js</p>
+                <a
+                  class="work__link"
+                  href="https://www.scene.health/"
+                  target="_blank"
+                  rel="noreferrer"
+                  >scene.health</a
+                >
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <footer class="archive__footer">
+          <p>selected professional work</p>
+          <div class="archive__footer-end">
+            <p>© <span class="js-year"></span> luminode studio</p>
             <button
               class="ambient-toggle js-interlude"
               type="button"

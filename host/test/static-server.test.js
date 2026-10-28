@@ -42,6 +42,7 @@ test('the site server falls back to index.html for app routes only', async () =>
   const server = await createStaticServer(root, { spaFallback: true })
   try {
     assert.equal(await (await fetch(new URL('/software', server.url))).text(), 'shelf')
+    assert.equal(await (await fetch(new URL('/engineering', server.url))).text(), 'shelf')
     assert.equal((await fetch(new URL('/missing.png', server.url))).status, 404)
   } finally {
     await server.close()

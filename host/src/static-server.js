@@ -56,7 +56,7 @@ function isFile (file) {
 
 /**
  * `spaFallback` serves index.html for extensionless paths (the studio site's
- * /software and /music routes). `remoteOrigin` redirects other missing files
+ * /software, /music, and /engineering routes). `remoteOrigin` redirects other missing files
  * there, so a packaged build can leave heavy media on the public site.
  */
 export function createStaticServer (root, { spaFallback = false, remoteOrigin = '' } = {}) {

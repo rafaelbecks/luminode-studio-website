@@ -108,6 +108,7 @@ const MOBILE_MQ = window.matchMedia("(max-width: 760px)");
 const body = document.body;
 const archive = document.querySelector(".archive");
 const music = document.querySelector(".music");
+const engineering = document.querySelector(".engineering");
 const bootScreen = document.querySelector(".boot-screen");
 const aboutModal = document.querySelector("#about-modal");
 const projectModal = document.querySelector("#project-modal");
@@ -214,11 +215,12 @@ function currentPath() {
 
 function resolveView(path = currentPath()) {
   if (path === "/music") return "music";
+  if (path === "/engineering") return "engineering";
   return "archive";
 }
 
 function isAppRoute(path = currentPath()) {
-  return path === "/software" || path === "/music";
+  return path === "/software" || path === "/music" || path === "/engineering";
 }
 
 function setView(view) {
@@ -226,6 +228,7 @@ function setView(view) {
   body.dataset.view = view;
   archive?.toggleAttribute("inert", view !== "archive");
   music?.toggleAttribute("inert", view !== "music");
+  engineering?.toggleAttribute("inert", view !== "engineering");
 }
 
 async function navigate(path) {
@@ -267,8 +270,10 @@ function enterStudio({ replacePath = true, playBoot = false } = {}) {
   window.setTimeout(() => {
     const focusTarget =
       currentView === "music"
-        ? document.querySelector(".js-nav-archive")
-        : document.querySelector(".archive .js-about");
+        ? document.querySelector(".music .js-nav-archive")
+        : currentView === "engineering"
+          ? document.querySelector(".engineering .js-nav-archive")
+          : document.querySelector(".archive .js-about");
     focusTarget?.focus({ preventScroll: true });
   }, 80);
 }
@@ -287,6 +292,7 @@ async function showFront({ push = true } = {}) {
   bootScreen?.setAttribute("aria-hidden", "false");
   archive?.setAttribute("inert", "");
   music?.setAttribute("inert", "");
+  engineering?.setAttribute("inert", "");
 
   if (push && currentPath() !== "/") {
     history.pushState({ view: "boot" }, "", "/");
@@ -1273,6 +1279,14 @@ document.querySelectorAll(".js-nav-archive").forEach((link) => {
     event.preventDefault();
     if (!hasEntered) enterStudio({ replacePath: false });
     navigate("/software");
+  });
+});
+
+document.querySelectorAll(".js-nav-engineering").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (!hasEntered) enterStudio({ replacePath: false });
+    navigate("/engineering");
   });
 });
 
