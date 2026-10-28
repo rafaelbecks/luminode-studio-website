@@ -1388,7 +1388,7 @@ a:focus-visible {
   border-top: 1px solid var(--line);
   padding-top: 18px;
   color: #c5c2c2;
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -1902,11 +1902,12 @@ a:focus-visible {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  font-size: 13px;
 }
 
 .modal__copy p {
   margin: 0 0 1.5em;
-  font-size: inherit;
+  font-size: 13px;
   font-family: inherit;
   letter-spacing: inherit;
   line-height: inherit;
@@ -2223,7 +2224,7 @@ a:focus-visible {
   .archive__footer {
     flex-direction: column;
     gap: 8px;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .archive__footer-end {

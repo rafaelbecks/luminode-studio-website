@@ -1,13 +1,12 @@
 const projects = {
   musgo: {
-    index: "LS-001 / SISTEMA GENERATIVO",
+    index: "LS-001 / GENERATIVE SYSTEM",
     code: "LS-001",
     title: "MUSGO",
     description:
-      "Un playground para experimentar con sistemas orgánicos generativos, deformativos y modulables en 3D.",
+      "A playground for experimenting with generative, deformable, and modulable organic systems in 3D.",
     detail: [
-      "MUSGO (Morfogénesis de Unidades y Sistemas Generativos Orgánicos) explora la generación de organismos de forma procedural usando métodos como las superfórmulas de Gielis y los sistemas de Lindenmayer (L-systems), combinándolos con deformaciones, transformaciones y modulaciones dinámicas. ",
-    
+      "MUSGO (Morfogénesis de Unidades y Sistemas Generativos Orgánicos) explores the procedural generation of organisms using methods such as Gielis superformulas and Lindenmayer systems (L-systems), combined with dynamic deformations, transformations, and modulations.",
     ],
     url: "https://musgo.luminode.studio/",
     repo: "https://github.com/rafaelbecks/musgo",
@@ -21,13 +20,13 @@ const projects = {
     ],
   },
   glow: {
-    index: "LS-002 / SINTETIZADOR VISUAL",
+    index: "LS-002 / VISUAL SYNTHESIZER",
     code: "LS-002",
     title: "G.L.O.W.",
     description:
-      "GLOW es un sintetizador visual open source para componer geometrías de luz en tiempo real.",
+      "GLOW (Geometric Light Oscillation Workstation) is an open-source visual synthesizer for composing geometries of light in real time.",
     detail:
-      "Inspirado en pioneros del arte computacional, busca hacer accesible la composición visual mediante módulos de luz geométricos (Luminodes), moduladores y herramientas interconectadas.",
+      "Inspired by pioneers of computational art, it aims to make visual composition accessible through geometric light modules (Luminodes), modulators, and interconnected tools.",
     url: "https://glow.luminode.studio/",
     repo: "https://github.com/rafaelbecks/glow",
     videos: [
@@ -40,18 +39,18 @@ const projects = {
     ],
   },
   intemperie: {
-    index: "LS-003 / INSTALACIÓN INTERACTIVA",
+    index: "LS-003 / INTERACTIVE INSTALLATION",
     code: "LS-003",
     title: "Topografías de la intemperie",
     description:
-      "Topografías de la intemperie es una instalación interactiva que construye territorios imaginarios a partir de memorias espaciales deformadas.",
+      "Topografías de la intemperie is an interactive installation that builds imaginary territories from distorted spatial memories.",
     detail:
-      "Paisajes virtuales navegables donde geografía, sonido, lenguaje e interacción convergen para producir una experiencia perceptiva inestable.",
+      "Navigable virtual landscapes where geography, sound, language, and interaction converge to produce an unstable perceptual experience.",
     url: "https://intemperie.luminode.studio/",
     repo: "https://github.com/rafaelbecks/topografias-intemperie",
     document: {
       href: "/projects/intemperie/topografias-intemperie.pdf",
-      label: "documento ↗",
+      label: "document ↗",
     },
     videos: [
       "/projects/intemperie/videos/exploracion-01.mp4",
@@ -92,7 +91,7 @@ const releases = {
     index: "MD-004 / MINIDISC",
     title: "sonidos incandescentes",
     description:
-      "sonidos incandescentes es una selección de composiciones inspiradas en poemas de Rafael Cadenas.",
+      "sonidos incandescentes is a selection of compositions inspired by poems by Rafael Cadenas.",
     url: "https://dormidos.bandcamp.com/album/sonidos-incandescentes",
     albumId: "3182473626",
     launchLabel: "bandcamp",
@@ -202,7 +201,7 @@ function toggleInterlude() {
     button.setAttribute("aria-pressed", playing ? "true" : "false");
     button.setAttribute(
       "aria-label",
-      playing ? "Pausar interlude" : "Reproducir interlude",
+      playing ? "Pause interlude" : "Play interlude",
     );
   });
 }
@@ -478,12 +477,12 @@ function fillDriveProjectPanel(item) {
   if (driveLinks) {
     const links = [];
     if (item.repo) {
-      links.push({ href: item.repo, label: "repositorio ↗" });
+      links.push({ href: item.repo, label: "repository ↗" });
     }
     if (item.document?.href) {
       links.push({
         href: item.document.href,
-        label: item.document.label || "documento ↗",
+        label: item.document.label || "document ↗",
       });
     }
     driveLinks.hidden = links.length === 0;
@@ -511,7 +510,7 @@ function fillDriveProjectPanel(item) {
       const cell = document.createElement("button");
       cell.type = "button";
       cell.className = "drive__video-cell";
-      cell.setAttribute("aria-label", `Ampliar video ${index + 1}`);
+      cell.setAttribute("aria-label", `Expand video ${index + 1}`);
       const video = document.createElement("video");
       video.className = "drive__video";
       video.src = src;
@@ -625,7 +624,7 @@ function ensureFlipClose(disk) {
   button = document.createElement("button");
   button.type = "button";
   button.className = "minidisc__flip-close js-flip-close";
-  button.setAttribute("aria-label", "Cerrar reproductor");
+  button.setAttribute("aria-label", "Close player");
   button.textContent = "×";
   button.addEventListener("click", (event) => {
     event.preventDefault();
@@ -748,7 +747,7 @@ async function openDrive(disk) {
   driveLaunch.dataset.url = item.url;
   driveLaunch.dataset.project = kind === "project" ? itemKey : "";
   driveLaunch.dataset.release = kind === "release" ? itemKey : "";
-  driveLaunch.textContent = item.launchLabel || "iniciar";
+  driveLaunch.textContent = item.launchLabel || "launch";
 
   if (kind === "project") {
     fillDriveProjectPanel(item);
@@ -781,7 +780,7 @@ async function openDrive(disk) {
   if (kind === "release") {
     activeDisk?.setAttribute(
       "aria-label",
-      `Reproducir ${item.title} en Bandcamp`,
+      `Play ${item.title} on Bandcamp`,
     );
   }
   driveLaunch.focus({ preventScroll: true });
@@ -857,7 +856,7 @@ async function closeDrive() {
   if (disk.dataset.release && releases[disk.dataset.release]) {
     disk.setAttribute(
       "aria-label",
-      `Seleccionar ${releases[disk.dataset.release].title}`,
+      `Select ${releases[disk.dataset.release].title}`,
     );
   }
 
@@ -873,7 +872,7 @@ async function closeDrive() {
   driveCode.hidden = false;
   driveDescription.hidden = false;
   if (driveHint) driveHint.hidden = true;
-  driveLaunch.textContent = "iniciar";
+  driveLaunch.textContent = "launch";
 }
 
 function confirmLaunch() {
