@@ -187,7 +187,7 @@ function toggleInterlude() {
   if (!interludeAudio) {
     interludeAudio = new Audio("/audio/interlude-1.mp3");
     interludeAudio.preload = "auto";
-    interludeAudio.loop = true;
+    interludeAudio.loop = false;
   }
 
   const playing = interludeAudio.paused;
