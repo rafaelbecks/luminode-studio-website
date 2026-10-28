@@ -111,7 +111,6 @@ const music = document.querySelector(".music");
 const engineering = document.querySelector(".engineering");
 const bootScreen = document.querySelector(".boot-screen");
 const aboutModal = document.querySelector("#about-modal");
-const projectModal = document.querySelector("#project-modal");
 const videoLightbox = document.querySelector("#video-lightbox");
 const launchName = document.querySelector(".js-launch-name");
 const drive = document.querySelector(".drive");
@@ -119,7 +118,6 @@ const driveCode = document.querySelector(".js-drive-code");
 const driveTitle = document.querySelector(".js-drive-title");
 const driveDescription = document.querySelector(".js-drive-description");
 const driveLaunch = document.querySelector(".js-drive-launch");
-const driveInfo = document.querySelector(".js-drive-info");
 const driveHint = document.querySelector(".js-drive-hint");
 const driveDetail = document.querySelector(".js-drive-detail");
 const driveLinks = document.querySelector(".js-drive-links");
@@ -283,7 +281,6 @@ async function showFront({ push = true } = {}) {
 
   if (activeDisk) await closeDrive();
   closeDialog(aboutModal);
-  closeDialog(projectModal);
 
   hasEntered = false;
   body.classList.add("is-booting");
@@ -310,197 +307,8 @@ function openDialog(dialog) {
   dialog.showModal();
 }
 
-let mediaPlaylist = [];
-let mediaIndex = 0;
-let mediaView = "grid";
-
-function getMediaElements() {
-  return {
-    mediaPane: projectModal?.querySelector(".js-modal-media"),
-    grid: projectModal?.querySelector(".js-media-grid"),
-    stage: projectModal?.querySelector(".js-media-stage"),
-    video: projectModal?.querySelector(".js-modal-video"),
-    indexLabel: projectModal?.querySelector(".js-media-index"),
-    prevBtn: projectModal?.querySelector(".js-media-prev"),
-    nextBtn: projectModal?.querySelector(".js-media-next"),
-    backBtn: projectModal?.querySelector(".js-media-back"),
-    projectBody: projectModal?.querySelector(".modal__body--project"),
-    copyPane: projectModal?.querySelector(".js-modal-copy"),
-  };
-}
-
-function stopProjectMedia() {
-  const { video } = getMediaElements();
-  if (!video) return;
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
-}
-
-function updateMediaNav() {
-  const { indexLabel, prevBtn, nextBtn } = getMediaElements();
-  const total = mediaPlaylist.length;
-  if (indexLabel) {
-    indexLabel.textContent = total ? `${mediaIndex + 1} / ${total}` : "";
-  }
-  const multi = total > 1;
-  if (prevBtn) prevBtn.hidden = !multi;
-  if (nextBtn) nextBtn.hidden = !multi;
-}
-
-function setMediaView(view) {
-  const { grid, stage, mediaPane } = getMediaElements();
-  mediaView = view;
-  mediaPane?.classList.toggle("is-playing", view === "player");
-  if (grid) grid.hidden = view !== "grid";
-  if (stage) stage.hidden = view !== "player";
-}
-
-function renderMediaGrid() {
-  const { grid } = getMediaElements();
-  if (!grid) return;
-
-  grid.replaceChildren();
-  mediaPlaylist.forEach((src, index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "modal__thumb";
-    button.setAttribute("role", "listitem");
-    button.setAttribute("aria-label", `Reproducir video ${index + 1}`);
-    button.dataset.index = String(index);
-
-    const preview = document.createElement("video");
-    preview.className = "modal__thumb-video";
-    preview.src = `${src}#t=0.1`;
-    preview.muted = true;
-    preview.playsInline = true;
-    preview.preload = "metadata";
-    preview.setAttribute("aria-hidden", "true");
-
-    const label = document.createElement("span");
-    label.className = "modal__thumb-label";
-    label.textContent = String(index + 1).padStart(2, "0");
-
-    button.append(preview, label);
-    button.addEventListener("click", () => {
-      showProjectVideo(index, { autoplay: true });
-    });
-    grid.append(button);
-  });
-}
-
-function showProjectVideo(index, { autoplay = false } = {}) {
-  const { video } = getMediaElements();
-  if (!video || !mediaPlaylist.length) return;
-
-  mediaIndex =
-    ((index % mediaPlaylist.length) + mediaPlaylist.length) % mediaPlaylist.length;
-  const src = mediaPlaylist[mediaIndex];
-  const shouldPlay = autoplay || (mediaView === "player" && !video.paused);
-
-  setMediaView("player");
-  video.src = src;
-  video.load();
-  updateMediaNav();
-
-  if (shouldPlay) {
-    video.play().catch(() => {});
-  }
-}
-
-function showMediaGrid() {
-  stopProjectMedia();
-  setMediaView("grid");
-}
-
-function setupProjectMedia(project) {
-  const { mediaPane, projectBody } = getMediaElements();
-  mediaPlaylist = Array.isArray(project.videos) ? project.videos.filter(Boolean) : [];
-  mediaIndex = 0;
-
-  const hasMedia = mediaPlaylist.length > 0;
-  if (mediaPane) mediaPane.hidden = !hasMedia;
-  projectBody?.classList.toggle("is-text-only", !hasMedia);
-
-  if (!hasMedia) {
-    stopProjectMedia();
-    setMediaView("grid");
-    updateMediaNav();
-    return;
-  }
-
-  renderMediaGrid();
-  showMediaGrid();
-  updateMediaNav();
-}
-
 function closeDialog(dialog) {
   if (dialog?.open) dialog.close();
-  if (dialog === projectModal) {
-    stopProjectMedia();
-    setMediaView("grid");
-  }
-}
-
-function fillProjectModal(projectKey) {
-  const project = projects[projectKey];
-  if (!project) return;
-
-  const header = projectModal.querySelector(".js-modal-header");
-  if (header) header.textContent = project.code || project.index.split(" / ")[0] || "LS";
-
-  projectModal.querySelector(".js-modal-index").textContent = project.index;
-  projectModal.querySelector(".js-modal-title").textContent = project.title;
-  projectModal.querySelector(".js-modal-description").textContent =
-    project.description;
-
-  const detailNode = projectModal.querySelector(".js-modal-detail");
-  const detailParts = Array.isArray(project.detail)
-    ? project.detail.filter(Boolean)
-    : project.detail
-      ? [project.detail]
-      : [];
-  detailNode.replaceChildren(
-    ...detailParts.flatMap((part, index) => {
-      const nodes = [document.createTextNode(part)];
-      if (index < detailParts.length - 1) {
-        nodes.push(document.createElement("br"), document.createElement("br"));
-      }
-      return nodes;
-    }),
-  );
-
-  setupProjectMedia(project);
-
-  const openLink = projectModal.querySelector(".js-modal-open");
-  const repoLink = projectModal.querySelector(".js-modal-repo");
-  const docLink = projectModal.querySelector(".js-modal-doc");
-  openLink.href = project.url;
-  repoLink.href = project.repo;
-  openLink.target = "_blank";
-  repoLink.target = "_blank";
-  openLink.rel = "noreferrer";
-  repoLink.rel = "noreferrer";
-
-  if (project.document?.href) {
-    docLink.hidden = false;
-    docLink.href = project.document.href;
-    docLink.textContent = project.document.label || "documento ↗";
-    docLink.removeAttribute("download");
-    docLink.target = "_blank";
-    docLink.rel = "noreferrer";
-  } else {
-    docLink.hidden = true;
-    docLink.removeAttribute("href");
-    docLink.removeAttribute("download");
-  }
-
-  const { copyPane } = getMediaElements();
-  if (copyPane) copyPane.scrollTop = 0;
-
-  openDialog(projectModal);
-
-  if (copyPane) copyPane.scrollTop = 0;
 }
 
 function clearDiskInlineStyles(disk) {
@@ -941,7 +749,6 @@ async function openDrive(disk) {
   driveLaunch.dataset.project = kind === "project" ? itemKey : "";
   driveLaunch.dataset.release = kind === "release" ? itemKey : "";
   driveLaunch.textContent = item.launchLabel || "iniciar";
-  if (driveInfo) driveInfo.hidden = true;
 
   if (kind === "project") {
     fillDriveProjectPanel(item);
@@ -1063,7 +870,6 @@ async function closeDrive() {
   activeItemKind = null;
   isAnimatingDisk = false;
   drive.hidden = true;
-  if (driveInfo) driveInfo.hidden = true;
   driveCode.hidden = false;
   driveDescription.hidden = false;
   if (driveHint) driveHint.hidden = true;
@@ -1083,7 +889,6 @@ function confirmLaunch() {
 
   isLaunching = true;
   closeDialog(aboutModal);
-  closeDialog(projectModal);
   launchName.textContent = item?.title ?? activeItemKey;
   body.classList.add("is-launching");
   drive.classList.add("is-launching");
@@ -1311,13 +1116,6 @@ window.addEventListener("popstate", () => {
   applyRoute();
 });
 
-document.querySelectorAll(".js-project-info").forEach((button) => {
-  button.addEventListener("click", (event) => {
-    event.stopPropagation();
-    fillProjectModal(button.dataset.project);
-  });
-});
-
 document.querySelectorAll(".js-select, .js-md-select").forEach((disk) => {
   disk.addEventListener("pointerdown", onPointerDown);
   disk.addEventListener("pointermove", onPointerMove);
@@ -1344,12 +1142,6 @@ document.querySelectorAll(".js-select, .js-md-select").forEach((disk) => {
 
 document.querySelector(".js-drive-dismiss").addEventListener("click", closeDrive);
 document.querySelector(".js-drive-launch").addEventListener("click", confirmLaunch);
-document.querySelector(".js-drive-info").addEventListener("click", () => {
-  if (activeItemKind === "project" && activeItemKey) {
-    fillProjectModal(activeItemKey);
-  }
-});
-
 drive.addEventListener("click", (event) => {
   if (event.target === drive) closeDrive();
 });
@@ -1362,25 +1154,6 @@ document.querySelectorAll(".modal").forEach((dialog) => {
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) closeDialog(dialog);
   });
-});
-
-projectModal?.querySelector(".js-media-back")?.addEventListener("click", () => {
-  showMediaGrid();
-});
-
-projectModal?.querySelector(".js-media-prev")?.addEventListener("click", () => {
-  if (mediaPlaylist.length < 2) return;
-  showProjectVideo(mediaIndex - 1, { autoplay: true });
-});
-
-projectModal?.querySelector(".js-media-next")?.addEventListener("click", () => {
-  if (mediaPlaylist.length < 2) return;
-  showProjectVideo(mediaIndex + 1, { autoplay: true });
-});
-
-projectModal?.querySelector(".js-modal-video")?.addEventListener("ended", () => {
-  if (mediaPlaylist.length < 2) return;
-  showProjectVideo(mediaIndex + 1, { autoplay: true });
 });
 
 videoLightbox?.querySelector(".js-video-lightbox-close")?.addEventListener("click", () => {
